@@ -4,10 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"
-    />
     <title>Signup</title>
     <style>
       body {
@@ -79,11 +75,6 @@
 
     <form action="/register" method="POST">
 
-      <label>User Type</label>
-        <select name="role" required>
-          <option value="student">Student</option>
-          <option value="admin">Admin</option>
-        </select>
       <div>
         <ul>
           <% if (typeof errors != 'undefined') { %> <% errors.forEach(error => { %>
@@ -122,6 +113,11 @@
         />
       </div>
       <div>
+        <label>User Type</label>
+        <select name="role" required>
+          <option value="student">Student</option>
+          <option value="admin">Admin</option>
+        </select>
         <input type="submit" value="Register" />
       </div>
 

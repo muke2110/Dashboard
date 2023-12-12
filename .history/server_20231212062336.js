@@ -9,7 +9,6 @@ const port = 3000;
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/styles'));
-app.use(express.static(__dirname + '/views'));
 
 app.get("/", (req, res) => {
     res.render('login');
@@ -54,8 +53,6 @@ app.post('/users/login', async (req, res) => {
             return;
         }
 
-        console.log({user});
-
         // Login successful, you can set a session or token here
         res.render('student_Dashboard');
     } else{
@@ -85,14 +82,13 @@ app.post('/users/login', async (req, res) => {
             return;
         }
 
-        console.log({ user });
         // Login successful, you can set a session or token here
         res.render('admin_Dashboard');
     } 
 });
 
 
-app.post('/register', async (req, res) => {
+app.post('/users/register', async (req, res) => {
     let { username, email, password, password2 , role} = req.body;
     let errors = [];
 
@@ -111,11 +107,7 @@ app.post('/register', async (req, res) => {
     // Form validation is passed
     let hashedPassword = await bcrypt.hash(password, 10);
 
-    console.log({
-        username,
-        email,
-        hashedPassword
-    })
+    conso
     const data = {
         name: username,
         email: email,

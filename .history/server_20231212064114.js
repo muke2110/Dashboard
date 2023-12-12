@@ -54,8 +54,10 @@ app.post('/users/login', async (req, res) => {
             return;
         }
 
-        console.log({user});
-
+        console.log({
+            user,
+            password
+        })
         // Login successful, you can set a session or token here
         res.render('student_Dashboard');
     } else{
@@ -85,14 +87,17 @@ app.post('/users/login', async (req, res) => {
             return;
         }
 
-        console.log({ user });
+        console.log({
+            name,
+            user.password
+        })
         // Login successful, you can set a session or token here
         res.render('admin_Dashboard');
     } 
 });
 
 
-app.post('/register', async (req, res) => {
+app.post('/users/register', async (req, res) => {
     let { username, email, password, password2 , role} = req.body;
     let errors = [];
 

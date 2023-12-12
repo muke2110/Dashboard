@@ -54,10 +54,8 @@ app.post('/users/login', async (req, res) => {
             return;
         }
 
-        console.log({user});
-
         // Login successful, you can set a session or token here
-        res.render('student_Dashboard');
+        res.redirect('../views/student_Dashboard');
     } else{
         console.log(req.body.role);
 
@@ -85,14 +83,13 @@ app.post('/users/login', async (req, res) => {
             return;
         }
 
-        console.log({ user });
         // Login successful, you can set a session or token here
-        res.render('admin_Dashboard');
+        res.render('ad');
     } 
 });
 
 
-app.post('/register', async (req, res) => {
+app.post('/users/register', async (req, res) => {
     let { username, email, password, password2 , role} = req.body;
     let errors = [];
 

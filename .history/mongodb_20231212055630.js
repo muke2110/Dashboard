@@ -2,10 +2,11 @@ const mongoose = require("mongoose");
 
 mongoose.connect("mongodb://localhost:27017/records")
 .then(()=>{
-    console.log("Mongodb Connected");
+    console.log("Mongodb Connected to student");
 }).catch(()=>{
     console.log("Failed");
 })
+
 
 
 const LoginSchema = new mongoose.Schema({
@@ -28,8 +29,6 @@ const LoginSchema = new mongoose.Schema({
 })
 
 
-const collection_student = new mongoose.model("collection_student",LoginSchema)
-const collection_admin = new mongoose.model("collection_admin",LoginSchema)
+const collection = new mongoose.model("collection1",LoginSchema)
 
-
-module.exports = {collection_admin,collection_student};
+module.exports = collection

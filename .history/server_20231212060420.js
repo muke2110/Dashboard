@@ -9,7 +9,6 @@ const port = 3000;
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/styles'));
-app.use(express.static(__dirname + '/views'));
 
 app.get("/", (req, res) => {
     res.render('login');
@@ -26,7 +25,6 @@ app.get('/signup', (req, res) => {
 
 app.post('/users/login', async (req, res) => {
     const { name, password } = req.body;
-
     if(req.body.role =='student'){
         console.log(req.body.role);
 
@@ -54,10 +52,8 @@ app.post('/users/login', async (req, res) => {
             return;
         }
 
-        console.log({user});
-
         // Login successful, you can set a session or token here
-        res.render('student_Dashboard');
+        res.render('Dashboard');
     } else{
         console.log(req.body.role);
 
@@ -69,7 +65,7 @@ app.post('/users/login', async (req, res) => {
             return;
         }
 
-        const user = await collection_admin.findOne({ "name": name });
+        const user = await collection_student.findOne({ "name": name });
 
         if (!user) {
             errors.push({ message: "User not found. Please check your username and try again." });
@@ -85,15 +81,15 @@ app.post('/users/login', async (req, res) => {
             return;
         }
 
-        console.log({ user });
         // Login successful, you can set a session or token here
-        res.render('admin_Dashboard');
+        res.render('Dashboard');
     } 
 });
 
 
-app.post('/register', async (req, res) => {
-    let { username, email, password, password2 , role} = req.body;
+app.post('/users/register', async (req, res) => {
+    let { username, email, password, password2 } = req.body;
+
     let errors = [];
 
     if (!username || !email || !password || !password2) {
@@ -111,19 +107,13 @@ app.post('/register', async (req, res) => {
     // Form validation is passed
     let hashedPassword = await bcrypt.hash(password, 10);
 
-    console.log({
-        username,
-        email,
-        hashedPassword
-    })
     const data = {
         name: username,
         email: email,
         password: hashedPassword
     }
-    if(role==='student'){
-        
-    const existingUser = await collection_student.findOne({ "name": data.name });
+
+    const existingUser = await collection.findOne({ "name": data.name });
 
     if (existingUser) {
         errors.push({ message: "User already exists. Try to login" });
@@ -132,23 +122,8 @@ app.post('/register', async (req, res) => {
     if (errors.length > 0) {
         res.render('signup', { errors });
     } else {
-        await collection_student.insertMany(data);
-        res.render('login');
-    }
-    } else {
-        
-    const existingUser = await collection_admin.findOne({ "name": data.name });
-
-    if (existingUser) {
-        errors.push({ message: "User already exists. Try to login" });
-    }
-
-    if (errors.length > 0) {
-        res.render('signup', { errors });
-    } else {
-        await collection_admin.insertMany(data);
-        res.render('login');
-    }
+        await collection.insertMany(data);
+        res.render('login'); // Change '/dashboard' to the actual route of your dashboard
     }
 });
 

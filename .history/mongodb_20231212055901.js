@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 mongoose.connect("mongodb://localhost:27017/records")
 .then(()=>{
-    console.log("Mongodb Connected");
+    console.log("Mongodb Connected to student");
 }).catch(()=>{
     console.log("Failed");
 })

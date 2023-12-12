@@ -92,7 +92,7 @@ app.post('/users/login', async (req, res) => {
 });
 
 
-app.post('/register', async (req, res) => {
+app.post('/users/register', async (req, res) => {
     let { username, email, password, password2 , role} = req.body;
     let errors = [];
 
