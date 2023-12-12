@@ -6,8 +6,7 @@ const {collection_admin, collection_student} = require('./mongodb');
 
 
 const port = 3000;
-app.set('view engine', 'ejs');
-app.use(express.static('views'));
+app.set('view engine', 'ejs')app.use(express.static('public'));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/styles'));
