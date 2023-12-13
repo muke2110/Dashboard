@@ -113,7 +113,7 @@ app.post('/register', async (req, res) => {
     const saltRounds = 10;
 
     // Form validation is passed
-    let hashedPassword = await bcrypt.hash(password, saltRounds);
+    let hashedPassword = await bcrypt.hash(password, 10);
 
     console.log({
         username,

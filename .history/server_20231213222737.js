@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const bcrypt = require("bcrypt");
+
+const bcrypt = require('bcrypt');
 const {collection_admin, collection_student} = require('./mongodb');
 
 
@@ -113,7 +115,7 @@ app.post('/register', async (req, res) => {
     const saltRounds = 10;
 
     // Form validation is passed
-    let hashedPassword = await bcrypt.hash(password, saltRounds);
+    let hashedPassword = await bcrypt.hash(password, 10);
 
     console.log({
         username,

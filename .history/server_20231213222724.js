@@ -110,10 +110,11 @@ app.post('/register', async (req, res) => {
         errors.push({ message: "Passwords do not match" });
     }
 
+    const bcrypt = require('bcrypt');
     const saltRounds = 10;
 
     // Form validation is passed
-    let hashedPassword = await bcrypt.hash(password, saltRounds);
+    let hashedPassword = await bcrypt.hash(password, 10);
 
     console.log({
         username,
