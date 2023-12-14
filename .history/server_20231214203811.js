@@ -13,6 +13,7 @@ app.set('views',path.join(__dirname,'views'));
 
 
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static(__dirname + '/views'));
 app.use(express.static(path.join(__dirname,'styles')))
 app.use(express.static(path.join(__dirname,'views')))
 

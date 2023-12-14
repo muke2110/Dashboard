@@ -14,7 +14,7 @@ app.set('views',path.join(__dirname,'views'));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname,'styles')))
-app.use(express.static(path.join(__dirname,'views')))
+/app.use(express.static(path.join(__dirname,'views')))
 
 app.get("/", (req, res) => {
     res.render('login');

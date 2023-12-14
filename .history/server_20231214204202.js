@@ -39,7 +39,7 @@ app.post('/users/login', async (req, res) => {
 
         if (!name || !password) {
             errors.push({ message: "Please enter both username and password" });
-            res.render('login', { errors });
+            res.render('login');
             return;
         }
 
@@ -48,7 +48,6 @@ app.post('/users/login', async (req, res) => {
         if (!user) {
             errors.push({ message: "User not found. Please check your username and try again." });
             res.render('login', { errors });
-            return;
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password);

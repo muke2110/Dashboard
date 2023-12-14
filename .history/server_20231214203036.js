@@ -9,12 +9,11 @@ const {collection_admin, collection_student} = require('./mongodb');
 const port = 3000;
 app.set('view engine', 'ejs');
 app.set('views',path.join(__dirname,'views'));
-
-
+app.use(express.static('views'));
 
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname,'styles')))
-app.use(express.static(path.join(__dirname,'views')))
+app.use(express.static(__dirname + '/styles'));
+app.use(express.static(__dirname + '/views'));
 
 app.get("/", (req, res) => {
     res.render('login');
@@ -39,7 +38,7 @@ app.post('/users/login', async (req, res) => {
 
         if (!name || !password) {
             errors.push({ message: "Please enter both username and password" });
-            res.render('login', { errors });
+            res.rd('login', { errors });
             return;
         }
 

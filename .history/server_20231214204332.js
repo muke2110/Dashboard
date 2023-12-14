@@ -39,7 +39,7 @@ app.post('/users/login', async (req, res) => {
 
         if (!name || !password) {
             errors.push({ message: "Please enter both username and password" });
-            res.render('login', { errors });
+            res.render('login');
             return;
         }
 

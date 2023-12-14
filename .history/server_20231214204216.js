@@ -39,8 +39,7 @@ app.post('/users/login', async (req, res) => {
 
         if (!name || !password) {
             errors.push({ message: "Please enter both username and password" });
-            res.render('login', { errors });
-            return;
+            res.render('login');
         }
 
         const user = await collection_student.findOne({ "name": name });
@@ -48,7 +47,6 @@ app.post('/users/login', async (req, res) => {
         if (!user) {
             errors.push({ message: "User not found. Please check your username and try again." });
             res.render('login', { errors });
-            return;
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password);
@@ -56,7 +54,6 @@ app.post('/users/login', async (req, res) => {
         if (!passwordMatch) {
             errors.push({ message: "Incorrect password. Please try again." });
             res.render('login', { errors });
-            return;
         }
 
         console.log({user});
