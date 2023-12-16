@@ -68,7 +68,7 @@ app.get('/admin_Dashboard', (req, res) => {
 });
 
 app.get('/student_Dashboard',(req,res)=>{
-    res.render('student_Dashboard');
+    res.render('/student_Dashboard')
 })
 
 
@@ -147,7 +147,7 @@ app.post('/users/login', async (req, res) => {
         }
 
         // Login successful, you can set a session or token here
-        res.redirect('/student_Dashboard');
+        res.render('/student_Dashboard');
     } else{
         console.log(req.body.role);
 
@@ -176,7 +176,7 @@ app.post('/users/login', async (req, res) => {
         }
 
         // Login successful, you can set a session or token here
-        res.redirect('/admin_Dashboard');
+        res.render('admin_Dashboard');
     } 
 });
 

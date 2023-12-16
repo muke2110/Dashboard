@@ -147,7 +147,7 @@ app.post('/users/login', async (req, res) => {
         }
 
         // Login successful, you can set a session or token here
-        res.redirect('/student_Dashboard');
+        res.render('/student_Dashboard');
     } else{
         console.log(req.body.role);
 
