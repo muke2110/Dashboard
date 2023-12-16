@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>STUDENT DASHBOARD</title>
+</head>
+<style>
+
+    .necn{
+      
+        
+        background-image: url('necn.png');
+        background-repeat: no-repeat;
+        background-size: 100vw 100vh;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .dashboard-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+      }
+      
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      
+      h1 {
+        font-weight: bold;
+        margin: 0;
+      }
+      
+      .logout-button {
+        padding: 8px 12px;
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      
+      .options-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      
+      .certificate-type,
+      .date-filter-container {
+        margin-bottom: 10px;
+      }
+      
+      .date-filter-container {
+        display: flex;
+        align-items: center;
+      }
+      
+      .search-container {
+        display: flex;
+        align-items: center;
+      }
+      
+      .student-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      
+      .student-table th, .student-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      
+      .student-table th {
+        background-color: #f2f2f2;
+      }
+      
+      .issues-button {
+        display: block;
+        margin-top: 20px;
+        float: right;
+        padding: 8px 12px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      
+      #feedback-container {
+        display: none;
+        margin-top: 20px;
+      }
+      
+      textarea {
+        width: 100%;
+        resize: vertical;
+      }
+</style>
+<body>
+    <div class="necn" >
+
+    </div>
+  <div class="dashboard-container">
+    <div class="top-bar">
+      <h1>STUDENT DASHBOARD</h1>
+      <button class="logout-button">Logout</button>
+    </div>
+
+    <div class="options-container">
+      <div class="certificate-type">
+        <label for="certificate-type">Certificate Types:</label>
+        <select id="certificate-type">
+          <option value="cert1">CEA/NSS/National Initiatives</option>
+          <option value="cert2">Sports And Game <optiones</option>
+          <option value="cert1">Cultural Activities</option>
+          <option value="cert2">Women's form activities<optiones</option>
+          <option value="cert1">Hobby clubs Activities</option>
+          <option value="cert2">Professional society Activities<optiones</option>
+          <option value="cert1">DEpt. Students Association Activities</option>
+          <option value="cert2">Technical Club Activities<optiones</option>
+          <option value="cert2">Innovation and Incubation Cell Activities<optiones</option>
+          <option value="cert1">Professional Self Initiatives</option>
+          <option value="cert2">Others<optiones</option>
+          <!-- Add other certificate options -->
+        </select>
+      </div>
+
+      <div class="date-filter-container">
+        <div>
+        <label for="start-date">Start Date:</label>
+        <input type="date" id="start-date">
+        </div>
+
+        <div>
+        <label for="end-date">End Date:</label>
+        <input type="date" id="end-date">
+        </div>
+
+        <div class="search-container">
+          <label for="search-bar"><img src="search-icon.png" alt="Search"></label>
+          <input type="text" placeholder="Search..." id="search-bar">
+        </div>
+      </div>
+    </div>
+
+    <table class="student-table">
+      <thead>
+        <tr>
+          <th>Serial Number</th>
+          <th>Name of the Event</th>
+          <th>Date</th>
+          <th>Certification ID</th>
+          <th>Certificate Download</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Table rows will be dynamically generated based on data -->
+      </tbody>
+    </table>
+
+    <button class="issues-button" onclick="toggleIssues()">Any Issues?</button>
+    
+    <div class="feedback-container" id="feedback-container">
+      <label for="feedback">Any Issues or Feedback:</label>
+      <textarea id="feedback" rows="4" cols="50"></textarea>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Admin Dashboard</title>
+</head>
+<style>
+    body {
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-image: url('necn.png');
+    }
+    
+    header {
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .logout-btn {
+        color: #fff;
+        text-decoration: none;
+        margin-left: 20px;
+    }
+    
+    .dashboard {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    
+    .certificate-management {
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin-right: 20px;
+    }
+    
+    .input-group {
+        margin-bottom: 15px;
+    }
+    
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    input,
+    select,
+    date {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+    
+    .upload-btn {
+        background-color: #3498db;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .sidebar {
+        width: 200px;
+        background-color: #333;
+        padding: 20px;
+    }
+    
+    .view-certificate-btn,
+    .student-issues-btn {
+        display: block;
+        color: #fff;
+        text-decoration: none;
+        margin-bottom: 10px;
+    }
+</style>
+
+<body>
+    <header>
+        <h1>ADMIN DASHBOARD</h1>
+        <a href="#" class="logout-btn">Logout</a>
+    </header>
+
+    <form class="dashboard" action="/UploadRecords" method="post" enctype="multipart/form-data">
+        
+
+        <div class="certificate-management">
+            <h2>Certificate Management</h2>
+            <ul>
+                <% if (typeof errors != 'undefined') { %> <% errors.forEach(error => { %>
+                <li><%= error.message %></li>
+                <% }) %> <% } %>
+            </ul>
+            <div class="input-group">
+                <label for="rollNumber" >Roll Number:</label>
+                <input type="text" name="roll_number" placeholder="Enter Roll Number">
+            </div>
+            <div class="input-group">
+                <label for="certificateId" >Certificate ID:</label>
+                <input type="text" name="certificate_id" placeholder="Enter Certificate Number">
+            </div>
+            <div class="input-group">
+                <label for="certificateType">Certificate Type:</label>
+                <select id="certificateType" name="certificate_type" >
+                    <option value="CEA/NSS/National Initiatives">CEA/NSS/National Initiatives</option>
+                    <option value="Sports and Game">Sports and Game <optiones</option>
+                    <option value="Cultural Activities">Cultural Activities</option>
+                    <option value="Women's form activities">Women's form activities<optiones</option>
+                    <option value="Hobby clubs Activities">Hobby clubs Activities</option>
+                    <option value="Professional society Activities">Professional society Activities<optiones</option>
+                    <option value="DEpt. Students Association Activities">DEpt. Students Association Activities</option>
+                    <option value="Technical Club Activities">Technical Club Activities<optiones</option>
+                    <option value="Innovation and Incubation Cell Activities">Innovation and Incubation Cell Activities<optiones</option>
+                    <option value="Professional Self Initiatives">Professional Self Initiatives</option>
+                    <option value="Others">Others<optiones</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="certificateDate">Date of Certificate:</label>
+                <input type="date">
+            </div>
+            <div class="input-group" name = 'Certificate'>
+                <label for="file">Select File:</label>
+                <input type="file" id="file" name="file">
+            </div>
+            <button type="submit" class="upload-btn">Upload</button>
+        </div>
+    </form>
+
+    <aside class="sidebar">
+        <a href="#" class="view-certificate-btn">View Certificate</a>
+        <a href="#" class="student-issues-btn">Issues of the Student</a>
+    </aside>
+    <script src="script.js"></script>
+</body>
+
+</html>
