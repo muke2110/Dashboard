@@ -159,7 +159,7 @@
             <% if (students[i] && students[i].certificate_id && students[i].certificate_id.length > 0) { %>
               <% students[i].certificate_id.forEach((certificate_id) => { %>
                 <tr>
-                  <td><%= i %></td>
+                  <td><%= i++ %></td>
                   <td><%= certificate_id %></td>
                   <td>
                     <form action="/download-certificate" method="post">
