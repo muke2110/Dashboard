@@ -80,7 +80,6 @@ app.post('/download-certificate', (req, res) => {
   
       res.setHeader('Content-Type', 'application/pdf');
       // Serve the certificate file
-      console.log(certificateFullPath);
       res.download(certificateFullPath);
     } catch (error) {
       console.error(error);

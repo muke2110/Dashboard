@@ -163,7 +163,7 @@
                   <td><%= certificate_id %></td>
                   <td>
                     <form action="/download-certificate" method="post">
-                      <input type="hidden" name="certificatePath" value="<%= students[i].certificate_path[students[i].certificate_id.indexOf(certificate_id)] %>">
+                      <input type="hidden" name="certificatePath" value="<%= students[i].certificate_pat[i] %>">
                       <input type="hidden" name="certificateId" value="<%= certificate_id %>">
                       <button type="submit">Download</button>
                     </form>

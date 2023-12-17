@@ -80,7 +80,6 @@ app.post('/download-certificate', (req, res) => {
   
       res.setHeader('Content-Type', 'application/pdf');
       // Serve the certificate file
-      console.log(certificateFullPath);
       res.download(certificateFullPath);
     } catch (error) {
       console.error(error);
@@ -168,9 +167,12 @@ app.post('/users/login', async (req, res) => {
                 return;
             }
 
-            // Fetch students certificates from the database
+            // Fetch all students from the database
             const students = await collection_student.find({ "roll_number": roll_number });
             res.render('student_Dashboard', { students });
+
+            //For Domain name purpose Only
+            res.redirect('/student_Dashboard');
 
             // Login successful, you can set a session or token here (if needed)
         } else {

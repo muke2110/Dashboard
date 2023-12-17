@@ -80,7 +80,6 @@ app.post('/download-certificate', (req, res) => {
   
       res.setHeader('Content-Type', 'application/pdf');
       // Serve the certificate file
-      console.log(certificateFullPath);
       res.download(certificateFullPath);
     } catch (error) {
       console.error(error);
@@ -168,7 +167,7 @@ app.post('/users/login', async (req, res) => {
                 return;
             }
 
-            // Fetch students certificates from the database
+            // Fetch students certificatesfrom the database
             const students = await collection_student.find({ "roll_number": roll_number });
             res.render('student_Dashboard', { students });
 
