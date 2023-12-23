@@ -18,7 +18,7 @@ app.set('views', __dirname + '/views');
 //Use this because data is coming in FORM data
 app.use(express.urlencoded({ extended: false }));
 //app.use(express.static(path.join(__dirname,'styles')))
-app.use(express.static(path.join(__dirname,'views')))
+//app.use(express.static(path.join(__dirname,'views')))
 app.use(express.static('styles'));
 app.use(cookieParser());
 app.use('Student',student)
@@ -39,7 +39,7 @@ const storage = multer.diskStorage({
 });
   
 const fileFilter = (req, file, cb) => {
-    //reject a file if it's not a jpg or png
+//reject a file if it's not a jpg or png
     if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/png" ||

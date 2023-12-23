@@ -17,9 +17,8 @@ app.set('views', __dirname + '/views');
 
 //Use this because data is coming in FORM data
 app.use(express.urlencoded({ extended: false }));
-//app.use(express.static(path.join(__dirname,'styles')))
+app.use(express.static(path.join(__dirname,'styles')))
 app.use(express.static(path.join(__dirname,'views')))
-app.use(express.static('styles'));
 app.use(cookieParser());
 app.use('Student',student)
 
@@ -39,7 +38,7 @@ const storage = multer.diskStorage({
 });
   
 const fileFilter = (req, file, cb) => {
-    //reject a file if it's not a jpg or png
+//reject a file if it's not a jpg or png
     if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/png" ||
@@ -90,7 +89,7 @@ app.get("/", async (req, res) => {
             });
         } else {
             // No token found, render the login page
-            res.render('login');
+            res.redirect('/users/logi');
         }
     } catch (error) {
         console.error(error);
@@ -126,7 +125,7 @@ app.get('/admin_Dashboard', (req, res) => {
             });
         } else {
             // No token found, render the login page
-            res.redirect('/');
+            res.render('login');
         }
         res.render('admin_Dashboard');
     } catch (error) {
@@ -156,7 +155,7 @@ app.get('/student_Dashboard',(req,res)=>{
             });
         } else {
             // No token found, render the login page
-            res.redirect('/');
+            res.render('login');
         }
     } catch (error) {
         console.error(error);

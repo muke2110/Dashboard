@@ -17,9 +17,8 @@ app.set('views', __dirname + '/views');
 
 //Use this because data is coming in FORM data
 app.use(express.urlencoded({ extended: false }));
-//app.use(express.static(path.join(__dirname,'styles')))
+app.use(express.static(path.join(__dirname,'styles')))
 app.use(express.static(path.join(__dirname,'views')))
-app.use(express.static('styles'));
 app.use(cookieParser());
 app.use('Student',student)
 
@@ -39,7 +38,7 @@ const storage = multer.diskStorage({
 });
   
 const fileFilter = (req, file, cb) => {
-    //reject a file if it's not a jpg or png
+//reject a file if it's not a jpg or png
     if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/png" ||
@@ -75,15 +74,14 @@ app.get("/", async (req, res) => {
                     console.log(decoded);
                     // Token is valid, check the role and redirect to the respective dashboard
                     if (decoded.role === 'student') {
-                        //const students = await student(decoded.roll_number, res);
-                        //res.render('student_Dashboard', { students, roll_number: decoded.roll_number });
-                        res.redirect('/student_Dashboard');
+                        const students = await student(decoded.roll_number, res);
+                        res.render('student_Dashboard', { students, roll_number: decoded.roll_number });
                     }
                     else if(decoded.role ==='admin'){
                         const name = decoded.name;
                         const user = await collection_admin.findOne({ "name": name });
                         if(user){
-                            res.redirect('/admin_Dashboard');
+                            res.render('admin_Dashboard');
                         }
                     }
                 }
@@ -100,6 +98,7 @@ app.get("/", async (req, res) => {
 
 app.get("/logout", (req, res) => {
     try {
+        console.log()
         res.clearCookie('uid');
         res.redirect('/');
         } catch (error) {
@@ -126,7 +125,7 @@ app.get('/admin_Dashboard', (req, res) => {
             });
         } else {
             // No token found, render the login page
-            res.redirect('/');
+            res.render('login');
         }
         res.render('admin_Dashboard');
     } catch (error) {
@@ -156,7 +155,7 @@ app.get('/student_Dashboard',(req,res)=>{
             });
         } else {
             // No token found, render the login page
-            res.redirect('/');
+            res.render('login');
         }
     } catch (error) {
         console.error(error);
@@ -276,9 +275,9 @@ app.post('/users/login', async (req, res) => {
   
 
             //Students information function call
-            //const students = await student(roll_number,res);
-            //res.render('student_Dashboard', { students ,roll_number});
-            res.redirect('/student_Dashboard');
+            const students = await student(roll_number,res);
+            res.render('student_Dashboard', { students ,roll_number});
+
             // Login successful, you can set a session or token here (if needed)
         } else {
             const { roll_number, password } = req.body;
