@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"
+    />
+    <title>Login</title>
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        opacity: 0.95;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        border-radius: 12px; /* Rounded corners */
+        background-image: url('/img.jpg');
+        background-repeat: no-repeat;
+        background-size: 100vw 100vh;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      form {
+        display: flex;
+        justify-content: ;
+        max-width: 400px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+        background-color: #4caf50;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #45a049;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        color: #d9534f;
+      }
+
+      a {
+        text-decoration: none;
+        color: #007bff;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+</head>
+<body>
+    <h1>LOGIN PAGE</h1>
+
+    
+    <form action="/users/login" method="post">
+      <div>
+
+        <ul>
+          <% if (typeof errors != 'undefined') { %> <% errors.forEach(error => { %>
+          <li><%= error.message %></li>
+          <% }) %> <% } %>
+        </ul>
+
+        <label>User Type</label>
+        <select name="role" required>
+          <option value="student">Student</option>
+          <option value="admin">Admin</option>
+        </select>
+        <label>Roll Number</label>
+        <input type="Roll Number" required name="roll_number" />
+        <label>Password</label>
+        <input type="password" required name="password" />
+  
+        <button type="submit">Login</button>
+      </div>
+      
+      <a href="/signup">Not an user?</a>
+      </form>
+</body>
+</html>
