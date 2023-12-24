@@ -8,14 +8,12 @@
   <title>STUDENT DASHBOARD</title>
 </head>
 <body>
-
-  <form id="logoutForm" action="/logout" method="get">
-    <button type="submit"><i class="material-icons">logout</i> Log Out</button>
-  </form> 
-
-  <div class="dashboard-container"> 
+  <div class="dashboard-container">
     <div class="top-bar">
-      <h1>STUDENT DASHBOARD</h1>  
+      <h1>STUDENT DASHBOARD</h1>
+      <form id="logoutForm" action="/logout" method="get">
+        <button type="submit"><i class="material-icons">logout</i> Log Out</button>
+    </form>    
     </div>
 
     <div class="student-info">
@@ -65,6 +63,7 @@
           <th>Serial Number</th>
           <th>Certification ID</th>
           <th>Certificates</th>
+          <th>Certificate View</th>
         </tr>
       </thead>
       <% let serialNumber = 1; %>
@@ -78,12 +77,14 @@
                   <td><%= serialNumber++; %></td>
                   <td><%= certificate_id %></td>
                   <td>
-                    <form action="/download-certificate" method="post" style="display: inline-block">
+                    <form action="/download-certificate" method="post">
                       <input type="hidden" name="certificatePath" value="<%= students[i].certificate_path[students[i].certificate_id.indexOf(certificate_id)] %>">
                       <input type="hidden" name="certificateId" value="<%= certificate_id %>">
                       <button type="submit">Download</button>
                     </form>
-                    <form action="/view-certificate" method="post" target="_blank" style="display: inline-block">
+                  </td>
+                  <td>
+                    <form action="/view-certificate" method="post" target="_blank">
                       <input type="hidden" name="certificatePath" value="<%= students[i].certificate_path[students[i].certificate_id.indexOf(certificate_id)] %>">
                       <input type="hidden" name="certificateId" value="<%= certificate_id %>">
                       <button type="submit">View</button>

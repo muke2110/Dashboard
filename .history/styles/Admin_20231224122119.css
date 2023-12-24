@@ -1,52 +1,31 @@
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f0f0f0;
+    font-family: 'Helvetica Neue', sans-serif;
+    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
 }
 
 header {
-    background-color: #3498db;
-    color: #fff;
+    background-color: #2c3e50;
+    color: #ecf0f1;
     text-align: center;
     padding: 20px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
     margin: 0;
 }
 
-form#logoutForm {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-form#logoutForm button {
-    background-color: #e74c3c;
-    color: #fff;
-    padding: 8px 12px;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-form#logoutForm button:hover {
-    background-color: #c0392b;
-}
-
 form.dashboard {
     max-width: 600px;
     margin: 20px auto;
-    background-color: #fff;
+    background-color: #ecf0f1;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
 }
 
 h2 {
-    color: #3498db;
+    color: #2c3e50;
 }
 
 ul {
@@ -65,7 +44,7 @@ ul li {
 label {
     display: block;
     margin-bottom: 8px;
-    color: #555;
+    color: #34495e;
 }
 
 input,
@@ -74,7 +53,7 @@ select {
     padding: 10px;
     box-sizing: border-box;
     margin-bottom: 15px;
-    border: 1px solid #ddd;
+    border: 1px solid #bdc3c7;
     border-radius: 4px;
 }
 
@@ -92,7 +71,7 @@ button.upload-btn:hover {
 }
 
 .sidebar {
-    background-color: #2c3e50;
+    background-color: #1c6ab9;
     color: #ecf0f1;
     padding: 20px;
     position: fixed;

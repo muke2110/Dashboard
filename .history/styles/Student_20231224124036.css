@@ -6,13 +6,13 @@ body {
 }
 
 .dashboard-container {
-  position: relative;
   max-width: 1200px;
   margin: 20px auto;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   border-radius: 10px;
+  position: relative;
 }
 
 .top-bar {
@@ -32,12 +32,12 @@ body {
 }
 
 #logoutForm button {
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  padding: 8px 15px;
   background-color: #3498db;
   color: #fff;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 #logoutForm button:hover {
@@ -96,12 +96,12 @@ body {
 
 .issues-button {
   margin-top: 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  padding: 10px 15px;
   background-color: #e74c3c;
   color: #fff;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 .feedback-container {

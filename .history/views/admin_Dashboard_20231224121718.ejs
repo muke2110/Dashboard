@@ -14,9 +14,6 @@
 <body>
     <header>
         <h1>ADMIN DASHBOARD</h1>
-        <form id="logoutForm" action="/logout" method="get">
-            <button type="submit"><i class="material-icons">logout</i> Log Out</button>
-        </form> 
     </header>
 
     <form class="dashboard" action="/UploadRecords" method="post" enctype="multipart/form-data">
@@ -24,6 +21,10 @@
 
         <div class="certificate-management">
             <h2>Certificate Management</h2>
+            
+            <form id="logoutForm" action="/logout" method="get">
+                <button type="submit"><i class="material-icons">logout</i> Log Out</button>
+            </form> 
             <ul>
                 <% if (typeof errors != 'undefined') { %> <% errors.forEach(error => { %>
                 <li><%= error.message %></li>

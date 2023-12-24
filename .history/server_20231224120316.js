@@ -168,13 +168,11 @@ app.post('/view-certificate', (req, res) => {
     try {
       // Retrieve certificate path and certificate ID from the request
       const certificatePath = req.body.certificatePath;
-  
-      // Resolve the path to make it absolute
-      const absolutePath = path.resolve(__dirname, certificatePath);
+      const certificateId = req.body.certificateId;
   
       // Add your logic to handle the viewing of the certificate here
       // For example, you might send the certificate file as a response
-      res.sendFile(absolutePath);
+      res.sendFile(certificatePath);
     } catch (error) {
       console.error('Error viewing certificate:', error);
       res.status(500).send('Internal Server Error');

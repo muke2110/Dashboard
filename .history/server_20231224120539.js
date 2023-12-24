@@ -168,6 +168,7 @@ app.post('/view-certificate', (req, res) => {
     try {
       // Retrieve certificate path and certificate ID from the request
       const certificatePath = req.body.certificatePath;
+      const certificateId = req.body.certificateId;
   
       // Resolve the path to make it absolute
       const absolutePath = path.resolve(__dirname, certificatePath);
