@@ -174,7 +174,6 @@ app.post('/download-certificate', (req, res) => {
     }
 });
 
-
 app.post('/UploadRecords', (req, res, next) => {
     upload.single("file")(req, res, async function (err) {
         let errors = [];
@@ -220,7 +219,6 @@ app.post('/UploadRecords', (req, res, next) => {
         return res.redirect('/admin_Dashboard');
     });
 });
-
 
 app.post('/users/login', async (req, res) => {
     try {

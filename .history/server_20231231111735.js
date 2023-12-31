@@ -62,7 +62,6 @@ app.get("/", async (req, res) => {
     }
 });
 
-
 app.get("/logout", (req, res) => {
     try {
         res.clearCookie('uid');
@@ -73,11 +72,9 @@ app.get("/logout", (req, res) => {
     }
 });
 
-
 app.get('/signup', (req, res) => {
     res.render('signup');
 });
-
 
 app.get('/admin_Dashboard', async(req, res) => {
     try {
@@ -105,7 +102,6 @@ app.get('/admin_Dashboard', async(req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
 
 app.get('/student_Dashboard',(req,res)=>{
     try {
@@ -137,7 +133,6 @@ app.get('/student_Dashboard',(req,res)=>{
     }
 })
 
-
 app.post('/view-certificate', (req, res) => {
     try {
       // Retrieve certificate path and certificate ID from the request
@@ -153,8 +148,7 @@ app.post('/view-certificate', (req, res) => {
       console.error('Error viewing certificate:', error);
       res.status(500).send('Internal Server Error');
     }
-});
-
+  });
 
 app.post('/download-certificate', (req, res) => {
     try {
@@ -173,7 +167,7 @@ app.post('/download-certificate', (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-
+  
 
 app.post('/UploadRecords', (req, res, next) => {
     upload.single("file")(req, res, async function (err) {
@@ -212,7 +206,7 @@ app.post('/UploadRecords', (req, res, next) => {
             );
         } else {
             console.log("No file uploaded");
-            errors.push({message : "Please fill all Information"});
+            errors.push({message : "Not a valid formate"});
             return res.render('admin_Dashboard', { errors });
         }
 
@@ -220,6 +214,8 @@ app.post('/UploadRecords', (req, res, next) => {
         return res.redirect('/admin_Dashboard');
     });
 });
+
+
 
 
 app.post('/users/login', async (req, res) => {
@@ -262,8 +258,13 @@ app.post('/users/login', async (req, res) => {
         
             // Store the token in a secure way (e.g., in a cookie or client-side storage)
             res.cookie('uid', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }); // Set the expiration time as needed
-            res.redirect('/student_Dashboard');
+  
 
+            //Students information function call
+            //const students = await student(roll_number,res);
+            //res.render('student_Dashboard', { students ,roll_number});
+            res.redirect('/student_Dashboard');
+            // Login successful, you can set a session or token here (if needed)
         } else {
             const { roll_number, password } = req.body;
 

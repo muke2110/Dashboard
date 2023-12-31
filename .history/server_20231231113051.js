@@ -221,7 +221,6 @@ app.post('/UploadRecords', (req, res, next) => {
     });
 });
 
-
 app.post('/users/login', async (req, res) => {
     try {
         if (req.body.role === 'student') {

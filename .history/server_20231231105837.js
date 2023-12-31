@@ -7,7 +7,6 @@ const {collection_admin, collection_student} = require('./mongodb');
 const multer = require('multer');
 const jwt = require('jsonwebtoken');
 const {student, adminInfo} = require('./Modules/studentFiles');
-const upload = require('./Modules/Multer');
 const cookieParser = require('cookie-parser');
 
 const port = 3000;
@@ -22,8 +21,45 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname,'views')))
 app.use(express.static('styles'));
 app.use(cookieParser());
-app.use('student',student);
-app.use('admin',adminInfo);
+/app.use('student',student);
+//app.use('admin',adminInfo);
+app.use(student , adminInfo);
+
+//configure how the files are stored
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      //where to store the file
+      cb(null, "./Records");
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const fileExtension = path.extname(file.originalname);
+        const newFileName = file.fieldname + '-' + uniqueSuffix + fileExtension;
+        cb(null, newFileName);
+    },
+});
+  
+const fileFilter = (req, file, cb) => {
+    //reject a file if it's not a jpg or png
+    if (
+        file.mimetype === "image/jpeg" ||
+        file.mimetype === "image/png" ||
+        file.mimetype === "application/pdf"
+    ) {
+        cb(null, true);
+    }else {
+        cb(new Error("Invalid file type. Only JPG, PNG, or PDF files are allowed."), false);
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5,
+    },
+    fileFilter: fileFilter,
+});
+  
 
 
 app.get("/", async (req, res) => {
@@ -62,7 +98,6 @@ app.get("/", async (req, res) => {
     }
 });
 
-
 app.get("/logout", (req, res) => {
     try {
         res.clearCookie('uid');
@@ -73,11 +108,9 @@ app.get("/logout", (req, res) => {
     }
 });
 
-
 app.get('/signup', (req, res) => {
     res.render('signup');
 });
-
 
 app.get('/admin_Dashboard', async(req, res) => {
     try {
@@ -105,7 +138,6 @@ app.get('/admin_Dashboard', async(req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
 
 app.get('/student_Dashboard',(req,res)=>{
     try {
@@ -137,7 +169,6 @@ app.get('/student_Dashboard',(req,res)=>{
     }
 })
 
-
 app.post('/view-certificate', (req, res) => {
     try {
       // Retrieve certificate path and certificate ID from the request
@@ -153,8 +184,7 @@ app.post('/view-certificate', (req, res) => {
       console.error('Error viewing certificate:', error);
       res.status(500).send('Internal Server Error');
     }
-});
-
+  });
 
 app.post('/download-certificate', (req, res) => {
     try {
@@ -173,7 +203,7 @@ app.post('/download-certificate', (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-
+  
 
 app.post('/UploadRecords', (req, res, next) => {
     upload.single("file")(req, res, async function (err) {
@@ -212,7 +242,7 @@ app.post('/UploadRecords', (req, res, next) => {
             );
         } else {
             console.log("No file uploaded");
-            errors.push({message : "Please fill all Information"});
+            errors.push({message : "Not a valid formate"});
             return res.render('admin_Dashboard', { errors });
         }
 
@@ -220,6 +250,8 @@ app.post('/UploadRecords', (req, res, next) => {
         return res.redirect('/admin_Dashboard');
     });
 });
+
+
 
 
 app.post('/users/login', async (req, res) => {
@@ -262,8 +294,13 @@ app.post('/users/login', async (req, res) => {
         
             // Store the token in a secure way (e.g., in a cookie or client-side storage)
             res.cookie('uid', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }); // Set the expiration time as needed
-            res.redirect('/student_Dashboard');
+  
 
+            //Students information function call
+            //const students = await student(roll_number,res);
+            //res.render('student_Dashboard', { students ,roll_number});
+            res.redirect('/student_Dashboard');
+            // Login successful, you can set a session or token here (if needed)
         } else {
             const { roll_number, password } = req.body;
 

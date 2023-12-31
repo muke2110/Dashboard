@@ -62,7 +62,6 @@ app.get("/", async (req, res) => {
     }
 });
 
-
 app.get("/logout", (req, res) => {
     try {
         res.clearCookie('uid');
@@ -73,11 +72,9 @@ app.get("/logout", (req, res) => {
     }
 });
 
-
 app.get('/signup', (req, res) => {
     res.render('signup');
 });
-
 
 app.get('/admin_Dashboard', async(req, res) => {
     try {
@@ -105,7 +102,6 @@ app.get('/admin_Dashboard', async(req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
 
 app.get('/student_Dashboard',(req,res)=>{
     try {
@@ -138,7 +134,7 @@ app.get('/student_Dashboard',(req,res)=>{
 })
 
 
-app.post('/view-certificate', (req, res) => {
+app.post('/view-certificate', (req, res) => 
     try {
       // Retrieve certificate path and certificate ID from the request
       const certificatePath = req.body.certificatePath;
@@ -153,8 +149,7 @@ app.post('/view-certificate', (req, res) => {
       console.error('Error viewing certificate:', error);
       res.status(500).send('Internal Server Error');
     }
-});
-
+  });
 
 app.post('/download-certificate', (req, res) => {
     try {
@@ -173,7 +168,6 @@ app.post('/download-certificate', (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-
 
 app.post('/UploadRecords', (req, res, next) => {
     upload.single("file")(req, res, async function (err) {
@@ -220,7 +214,6 @@ app.post('/UploadRecords', (req, res, next) => {
         return res.redirect('/admin_Dashboard');
     });
 });
-
 
 app.post('/users/login', async (req, res) => {
     try {

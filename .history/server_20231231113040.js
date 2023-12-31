@@ -104,8 +104,7 @@ app.get('/admin_Dashboard', async(req, res) => {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
-});
-
+});.
 
 app.get('/student_Dashboard',(req,res)=>{
     try {
@@ -155,7 +154,6 @@ app.post('/view-certificate', (req, res) => {
     }
 });
 
-
 app.post('/download-certificate', (req, res) => {
     try {
       const certificatePath = req.body.certificatePath;
@@ -173,7 +171,6 @@ app.post('/download-certificate', (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-
 
 app.post('/UploadRecords', (req, res, next) => {
     upload.single("file")(req, res, async function (err) {
@@ -220,7 +217,6 @@ app.post('/UploadRecords', (req, res, next) => {
         return res.redirect('/admin_Dashboard');
     });
 });
-
 
 app.post('/users/login', async (req, res) => {
     try {
