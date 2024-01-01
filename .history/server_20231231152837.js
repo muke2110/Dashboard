@@ -9,8 +9,6 @@ const jwt = require('jsonwebtoken');
 const {student, adminInfo} = require('./Modules/retrieveDetails');
 const upload = require('./Modules/Multer');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const { error } = require('console');
 
 const port = 3000;
 const secretKey = 'Project@2110';
@@ -23,10 +21,10 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname,'views')))
 app.use(express.static('styles'));
-app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('student',student);
 app.use('admin',adminInfo);
+
 
 
 app.get("/", async (req, res) => {
@@ -82,23 +80,29 @@ app.get('/signup', (req, res) => {
 });
 
 
-app.get('/admin_Dashboard', async(req, res) => {
+app.get('/admin_Dashboard', async (req, res) => {
     try {
         const token = req.cookies['uid'];
+        let errors = [];
+
+        // Check for errors in the query parameters
+        const errorsParam = req.query.errors;
+        if (errorsParam) {
+            errors = JSON.parse(decodeURIComponent(errorsParam));
+        }
+
         if (token) {
             // Verify the token
             jwt.verify(token, secretKey, async (err, decoded) => {
                 if (err) {
                     // If token is not valid, render the login page
                     res.render('login');
-                }               
-                else if(decoded.role === 'admin'){
+                } else if (decoded.role === 'admin') {
                     const admin = await adminInfo(decoded.roll_number, res);
-                    res.render('admin_Dashboard',{admin});
+                    res.render('admin_Dashboard', { admin, errors });
                 }
             });
-        } 
-        else {
+        } else {
             // No token found, render the login page
             res.redirect('/');
         }
@@ -107,32 +111,6 @@ app.get('/admin_Dashboard', async(req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
-
-app.get('/admin_Dashboard/viewStudentDetails', (req, res) => {
-    // Render the "viewStudentDetails" EJS file
-    res.render('viewStudentDetails');
-});
-
-
-app.post('/admin_Dashboard/viewStudentDetails', async (req, res) => {
-    try {
-      const roll_number = req.body.roll_number;
-  
-      // Fetch student details based on the roll number
-      const students = await student(roll_number, res);
-  
-      console.log('Data sent to EJS:', { student: students, searched: true });
-
-      // Render the "viewStudentDetails" EJS template with the fetched data
-      res.json({ student: students, searched: true });
-    } catch (error) {
-      console.error('Error:', error);
-      res.status(500).send('Internal Server Error');
-    }
-  });
-
-
 
 app.get('/student_Dashboard',(req,res)=>{
     try {
@@ -242,6 +220,7 @@ app.post('/UploadRecords', (req, res, next) => {
             errors.push({message : "Please fill all Information"});
             return res.render('admin_Dashboard', { errors });
         }
+
         // Render the dashboard after processing the request
         return res.redirect('/admin_Dashboard');
     });

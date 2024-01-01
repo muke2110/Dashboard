@@ -9,7 +9,6 @@ const jwt = require('jsonwebtoken');
 const {student, adminInfo} = require('./Modules/retrieveDetails');
 const upload = require('./Modules/Multer');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
 const { error } = require('console');
 
 const port = 3000;
@@ -23,7 +22,6 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname,'views')))
 app.use(express.static('styles'));
-app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('student',student);
 app.use('admin',adminInfo);
@@ -113,25 +111,6 @@ app.get('/admin_Dashboard/viewStudentDetails', (req, res) => {
     // Render the "viewStudentDetails" EJS file
     res.render('viewStudentDetails');
 });
-
-
-app.post('/admin_Dashboard/viewStudentDetails', async (req, res) => {
-    try {
-      const roll_number = req.body.roll_number;
-  
-      // Fetch student details based on the roll number
-      const students = await student(roll_number, res);
-  
-      console.log('Data sent to EJS:', { student: students, searched: true });
-
-      // Render the "viewStudentDetails" EJS template with the fetched data
-      res.json({ student: students, searched: true });
-    } catch (error) {
-      console.error('Error:', error);
-      res.status(500).send('Internal Server Error');
-    }
-  });
-
 
 
 app.get('/student_Dashboard',(req,res)=>{

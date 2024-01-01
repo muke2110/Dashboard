@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Search</title>
+    <link rel="stylesheet" href="/your-path-to-css-file.css">
+</head>
+<body>
+
+  <div class="dashboard-container">
+    <div class="top-bar">
+      <h1>STUDENT CERTIFICATE DETAILS</h1>
+    </div>
+
+    <form class="search-container" action="/admin_Dashboard/viewStudentDetails" method="post">
+      <label for="roll-number-search">Search by Roll Number:</label>
+      <input type="text" name="roll_number" id="roll-number-search" placeholder="Enter Roll Number">
+      <button type="submit">Search</button>
+    </form>
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#searchButton').click(function () {
+        // Get roll number from the input
+        const rollNumber = $('#roll-number-search').val();
+
+        // Send a POST request to the server
+        $.post('/admin_Dashboard/viewStudentDetails', { roll_number: rollNumber })
+          .done(function (data) {
+            // Display the result container
+            $('#resultContainer').show();
+
+            if (data && data.students) {
+              // Display student details
+              $('#studentInfo').html('<p><strong>Roll Number:</strong> ' + data.students.roll_number + '</p>');
+
+              // Display certificates
+              const certificatesList = $('#certificatesList');
+              certificatesList.empty();
+
+              if (data.students.certificates && data.students.certificates.length > 0) {
+                data.students.certificates.forEach(function (certificate) {
+                  certificatesList.append('<li><strong>Certificate ID:</strong> ' + certificate.certificate_id + '</li>');
+                });
+              } else {
+                certificatesList.append('<p>No certificates found for this student.</p>');
+              }
+            } else {
+              // If no records found, display a message
+              $('#noRecords').show();
+            }
+          })
+          .fail(function (error) {
+            console.error('Error:', error.responseText);
+          });
+      });
+    });
+  </script>
+</body>
+</html>

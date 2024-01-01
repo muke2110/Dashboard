@@ -9,8 +9,6 @@ const jwt = require('jsonwebtoken');
 const {student, adminInfo} = require('./Modules/retrieveDetails');
 const upload = require('./Modules/Multer');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const { error } = require('console');
 
 const port = 3000;
 const secretKey = 'Project@2110';
@@ -23,10 +21,10 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname,'views')))
 app.use(express.static('styles'));
-app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('student',student);
 app.use('admin',adminInfo);
+
 
 
 app.get("/", async (req, res) => {
@@ -82,23 +80,27 @@ app.get('/signup', (req, res) => {
 });
 
 
-app.get('/admin_Dashboard', async(req, res) => {
+app.get('/admin_Dashboard', async (req, res) => {
     try {
         const token = req.cookies['uid'];
+
         if (token) {
             // Verify the token
             jwt.verify(token, secretKey, async (err, decoded) => {
                 if (err) {
                     // If token is not valid, render the login page
                     res.render('login');
-                }               
-                else if(decoded.role === 'admin'){
+                } else if (decoded.role === 'admin') {
                     const admin = await adminInfo(decoded.roll_number, res);
-                    res.render('admin_Dashboard',{admin});
+
+                    // Retrieve errors from query parameters
+                    const errors = req.query.errors ? JSON.parse(decodeURIComponent(req.query.errors)) : [];
+
+                    // Render the admin_Dashboard page with admin information and errors
+                    res.render('admin_Dashboard', { admin, errors });
                 }
             });
-        } 
-        else {
+        } else {
             // No token found, render the login page
             res.redirect('/');
         }
@@ -107,31 +109,6 @@ app.get('/admin_Dashboard', async(req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
-
-app.get('/admin_Dashboard/viewStudentDetails', (req, res) => {
-    // Render the "viewStudentDetails" EJS file
-    res.render('viewStudentDetails');
-});
-
-
-app.post('/admin_Dashboard/viewStudentDetails', async (req, res) => {
-    try {
-      const roll_number = req.body.roll_number;
-  
-      // Fetch student details based on the roll number
-      const students = await student(roll_number, res);
-  
-      console.log('Data sent to EJS:', { student: students, searched: true });
-
-      // Render the "viewStudentDetails" EJS template with the fetched data
-      res.json({ student: students, searched: true });
-    } catch (error) {
-      console.error('Error:', error);
-      res.status(500).send('Internal Server Error');
-    }
-  });
-
 
 
 app.get('/student_Dashboard',(req,res)=>{
@@ -211,18 +188,17 @@ app.post('/UploadRecords', (req, res, next) => {
         if (err instanceof multer.MulterError) {
             if (err.code === 'LIMIT_FILE_SIZE') {
                 errors.push({ message: "File size is too large." });
-                return res.render('admin_Dashboard', { errors });
+                return res.redirect(`/admin_Dashboard?errors=${encodeURIComponent(JSON.stringify(errors))}`);
             }
-            return res.render('admin_Dashboard', { errors });
+            return res.redirect(`/admin_Dashboard?errors=${encodeURIComponent(JSON.stringify(errors))}`);
         }
 
         // Check if student exists
         const existingStudent = await collection_student.findOne({ "roll_number": roll_number });
-        
 
         if (!existingStudent) {
             errors.push({ message: "Student not found." });
-            return res.render('admin_Dashboard', { errors });
+            return res.redirect(`/admin_Dashboard?errors=${encodeURIComponent(JSON.stringify(errors))}`);
         }
 
         // No error, continue with your logic
@@ -240,12 +216,15 @@ app.post('/UploadRecords', (req, res, next) => {
         } else {
             console.log("No file uploaded");
             errors.push({message : "Please fill all Information"});
-            return res.render('admin_Dashboard', { errors });
+            return res.redirect(`/admin_Dashboard?errors=${encodeURIComponent(JSON.stringify(errors))}`);
         }
-        // Render the dashboard after processing the request
+
+        // Redirect to the dashboard after processing the request
         return res.redirect('/admin_Dashboard');
     });
 });
+
+
 
 
 app.post('/users/login', async (req, res) => {

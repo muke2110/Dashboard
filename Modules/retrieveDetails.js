@@ -13,7 +13,6 @@ async function student(roll_number, res) {
 async function adminInfo(roll_number, res){
   try {
     const result = await collection_admin.find({ "roll_number": roll_number });
-    console.log(result);
     return result
   } catch (error) {
     console.log(error);

@@ -117,20 +117,19 @@ app.get('/admin_Dashboard/viewStudentDetails', (req, res) => {
 
 app.post('/admin_Dashboard/viewStudentDetails', async (req, res) => {
     try {
-      const roll_number = req.body.roll_number;
-  
-      // Fetch student details based on the roll number
-      const students = await student(roll_number, res);
-  
-      console.log('Data sent to EJS:', { student: students, searched: true });
+        const roll_number = req.body.roll_number;
 
-      // Render the "viewStudentDetails" EJS template with the fetched data
-      res.json({ student: students, searched: true });
+        // Fetch student details based on the roll number
+        const students = await student(roll_number, res);
+
+        // Render the "viewStudentDetails" EJS template with the fetched data
+        //console.log(students)
+        res.render('viewStudentDetails', { students, searched: true });
     } catch (error) {
-      console.error('Error:', error);
-      res.status(500).send('Internal Server Error');
+        console.error('Error:', error);
+        res.status(500).send('Internal Server Error');
     }
-  });
+});
 
 
 
