@@ -1,3 +1,5 @@
+<!-- Assuming your EJS template file is named "viewStudentDetails.ejs" -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,8 +40,8 @@
         <!-- Certificates will be displayed here -->
       </ul>
 
-      <h2 id="studentTableHeading">Student Table:</h2>
-      <table id="studentTable" class="student-table" border="1" style="display: none;">
+      <h2>Student Table:</h2>
+      <table class="student-table" border="1">
         <thead>
           <tr>
             <th>Serial Number</th>
@@ -94,21 +96,19 @@
   
               // Display certificates
               const certificatesList = document.getElementById('certificatesList');
-              certificatesList.innerHTML = ''; // Clear previous content
-
-              if (student.certificate_id && student.certificate_id.length > 0) {
-                const li = document.createElement('li');
-                li.innerHTML = '<strong>Certificates:</strong> ';
+  
+              if (student.certificates && student.certificates.length > 0) {
+                student.certificates.forEach(function (certificate) {
+                  const li = document.createElement('li');
+                  li.innerHTML = '<strong>Certificate ID:</strong> ' + certificate;
+                  certificatesList.appendChild(li);
+                });
               } else {
-                // Display a message when no certificates are found
-                const li = document.createElement('li');
-                li.innerHTML = '<strong>No certificates found for this student.</strong>';
-                certificatesList.appendChild(li);
+                certificatesList.innerHTML = '<p>No certificates found for this student.</p>';
               }
   
               // Display student table
               const studentTableBody = document.getElementById('studentTableBody');
-              studentTableBody.innerHTML = ''; // Clear previous content
               let serialNumber = 1;
   
               if (student.certificate_id && student.certificate_id.length > 0) {
@@ -133,10 +133,6 @@
                   studentTableBody.appendChild(tr);
                 });
               }
-
-              // Display student table only if there are certificates
-              const studentTable = document.getElementById('studentTable');
-              studentTable.style.display = (serialNumber > 1) ? 'table' : 'none';
             } else {
               // If no records found, display a message and clear the roll number
               document.getElementById('noRecords').style.display = 'block';

@@ -98,7 +98,11 @@
 
               if (student.certificate_id && student.certificate_id.length > 0) {
                 const li = document.createElement('li');
-                li.innerHTML = '<strong>Certificates:</strong> ';
+                                  li.innerHTML = '<strong>Certificate ID:</strong> ' + certificate_id;
+                student.certificate_id.forEach(function (certificate_id) {
+                  
+                  certificatesList.appendChild(li);
+                });
               } else {
                 // Display a message when no certificates are found
                 const li = document.createElement('li');

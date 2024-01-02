@@ -96,14 +96,11 @@
               const certificatesList = document.getElementById('certificatesList');
               certificatesList.innerHTML = ''; // Clear previous content
 
-              if (student.certificate_id && student.certificate_id.length > 0) {
-                const li = document.createElement('li');
-                li.innerHTML = '<strong>Certificates:</strong> ';
-              } else {
+              if (!(student.certificate_id && student.certificate_id.length > 0) 
                 // Display a message when no certificates are found
                 const li = document.createElement('li');
                 li.innerHTML = '<strong>No certificates found for this student.</strong>';
-                certificatesList.appendChild(li);
+                certificatesList.appendChild(li); 
               }
   
               // Display student table

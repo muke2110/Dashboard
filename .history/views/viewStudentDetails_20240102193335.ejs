@@ -1,3 +1,5 @@
+<!-- Assuming your EJS template file is named "viewStudentDetails.ejs" -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +24,7 @@
     </div>
 
     <!-- Insert your search form here -->
-    <form class="search-container" id="searchForm">
+    <form class="search-container" action="" id="searchForm">
       <label for="roll-number-search">Search by Roll Number:</label>
       <input type="text" name="roll_number" id="roll-number-search" placeholder="Enter Roll Number">
       <button type="submit" id="searchButton">Search</button>
@@ -38,8 +40,8 @@
         <!-- Certificates will be displayed here -->
       </ul>
 
-      <h2 id="studentTableHeading">Student Table:</h2>
-      <table id="studentTable" class="student-table" border="1" style="display: none;">
+      <h2>Student Table:</h2>
+      <table class="student-table" border="1">
         <thead>
           <tr>
             <th>Serial Number</th>
@@ -61,10 +63,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      document.getElementById('searchForm').addEventListener('submit', function (event) {
-        // Prevent the default form submission
-        event.preventDefault();
-  
+      document.getElementById('searchButton').addEventListener('click', function () {
         // Get roll number from the input
         const rollNumber = document.getElementById('roll-number-search').value;
   
@@ -77,38 +76,33 @@
           body: JSON.stringify({ roll_number: rollNumber }),
         }).then(response => response.json())
           .then(data => {
-            // Reset all sections
-            document.getElementById('resultContainer').style.display = 'none';
-            document.getElementById('certificatesList').innerHTML = '';
-            document.getElementById('studentTableBody').innerHTML = '';
-            document.getElementById('noRecords').style.display = 'none';
+            // Display the result container
+            document.getElementById('resultContainer').style.display = 'block';
   
             console.log(data);
   
             if (data && data.student.length > 0) {
               // Display student details for the first student
               const student = data.student[0];
-  
-              // Update roll number only if data is valid
               document.getElementById('rollNumber').textContent = student.roll_number;
   
               // Display certificates
               const certificatesList = document.getElementById('certificatesList');
-              certificatesList.innerHTML = ''; // Clear previous content
-
-              if (student.certificate_id && student.certificate_id.length > 0) {
-                const li = document.createElement('li');
-                li.innerHTML = '<strong>Certificates:</strong> ';
+              certificatesList.innerHTML = '';
+  
+              if (student.certificates && student.certificates.length > 0) {
+                student.certificates.forEach(function (certificate) {
+                  const li = document.createElement('li');
+                  li.innerHTML = '<strong>Certificate ID:</strong> ' + certificate;
+                  certificatesList.appendChild(li);
+                });
               } else {
-                // Display a message when no certificates are found
-                const li = document.createElement('li');
-                li.innerHTML = '<strong>No certificates found for this student.</strong>';
-                certificatesList.appendChild(li);
+                certificatesList.innerHTML = '<p>No certificates found for this student.</p>';
               }
   
               // Display student table
               const studentTableBody = document.getElementById('studentTableBody');
-              studentTableBody.innerHTML = ''; // Clear previous content
+              studentTableBody.innerHTML = '';
               let serialNumber = 1;
   
               if (student.certificate_id && student.certificate_id.length > 0) {
@@ -133,18 +127,10 @@
                   studentTableBody.appendChild(tr);
                 });
               }
-
-              // Display student table only if there are certificates
-              const studentTable = document.getElementById('studentTable');
-              studentTable.style.display = (serialNumber > 1) ? 'table' : 'none';
             } else {
-              // If no records found, display a message and clear the roll number
+              // If no records found, display a message
               document.getElementById('noRecords').style.display = 'block';
-              document.getElementById('rollNumber').textContent = '';
             }
-  
-            // Display the result container
-            document.getElementById('resultContainer').style.display = 'block';
           })
           .catch(function (error) {
             console.error('Error:', error);

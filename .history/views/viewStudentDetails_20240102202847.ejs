@@ -1,0 +1,89 @@
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('searchForm').addEventListener('submit', function (event) {
+    // Prevent the default form submission
+    event.preventDefault();
+
+    // Get roll number from the input
+    const rollNumber = document.getElementById('roll-number-search').value;
+
+    // Send a POST request to the server using Fetch API
+    fetch('/admin_Dashboard/viewStudentDetails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ roll_number: rollNumber }),
+    }).then(response => response.json())
+      .then(data => {
+        // Reset all sections
+        document.getElementById('resultContainer').style.display = 'none';
+        document.getElementById('certificatesList').innerHTML = '';
+        document.getElementById('studentTableBody').innerHTML = '';
+        document.getElementById('noRecords').style.display = 'none';
+
+        console.log(data);
+
+        if (data && data.student.length > 0) {
+          // Display student details for the first student
+          const student = data.student[0];
+
+          // Update roll number only if data is valid
+          document.getElementById('rollNumber').textContent = student.roll_number;
+
+          // Display certificates
+          const certificatesList = document.getElementById('certificatesList');
+          certificatesList.innerHTML = ''; // Clear previous content
+
+          if (student.certificates && student.certificates.length > 0) {
+            student.certificates.forEach(function (certificate) {
+              const li = document.createElement('li');
+              li.innerHTML = '<strong>Certificate ID:</strong> ' + certificate;
+              certificatesList.appendChild(li);
+            });
+          } else {
+            // Display a message when no certificates are found
+            const li = document.createElement('li');
+            li.innerHTML = 'No certificates found for this student.';
+            certificatesList.appendChild(li);
+          }
+
+          // Display student table
+          const studentTableBody = document.getElementById('studentTableBody');
+          let serialNumber = 1;
+
+          if (student.certificate_id && student.certificate_id.length > 0) {
+            student.certificate_id.forEach(function (certificate_id) {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td>${serialNumber++}</td>
+                <td>${certificate_id}</td>
+                <td>
+                  <form action="/download-certificate" method="post" style="display: inline-block">
+                    <input type="hidden" name="certificatePath" value="${student.certificate_path[student.certificate_id.indexOf(certificate_id)]}">
+                    <input type="hidden" name="certificateId" value="${certificate_id}">
+                    <button type="submit">Download</button>
+                  </form>
+                  <form action="/view-certificate" method="post" target="_blank" style="display: inline-block">
+                    <input type="hidden" name="certificatePath" value="${student.certificate_path[student.certificate_id.indexOf(certificate_id)]}">
+                    <input type="hidden" name="certificateId" value="${certificate_id}">
+                    <button type="submit">View</button>
+                  </form>
+                </td>
+              `;
+              studentTableBody.appendChild(tr);
+            });
+          }
+        } else {
+          // If no records found, display a message and clear the roll number
+          document.getElementById('noRecords').style.display = 'block';
+          document.getElementById('rollNumber').textContent = '';
+        }
+
+        // Display the result container
+        document.getElementById('resultContainer').style.display = 'block';
+      })
+      .catch(function (error) {
+        console.error('Error:', error);
+      });
+  });
+});

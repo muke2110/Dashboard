@@ -23,7 +23,6 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname,'views')))
 app.use(express.static('styles'));
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('student',student);
@@ -113,6 +112,7 @@ app.get('/admin_Dashboard', async(req, res) => {
 app.get('/admin_Dashboard/viewStudentDetails', (req, res) => {
     // Render the "viewStudentDetails" EJS file
     res.render('viewStudentDetails');
+    res.sendFile(__dirname + '/viewStudentDetails.html')
 });
 
 

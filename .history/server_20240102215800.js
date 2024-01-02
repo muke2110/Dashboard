@@ -112,7 +112,7 @@ app.get('/admin_Dashboard', async(req, res) => {
 
 app.get('/admin_Dashboard/viewStudentDetails', (req, res) => {
     // Render the "viewStudentDetails" EJS file
-    res.render('viewStudentDetails');
+    //res.render('viewStudentDetails');
 });
 
 

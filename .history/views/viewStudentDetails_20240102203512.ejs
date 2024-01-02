@@ -96,9 +96,12 @@
               const certificatesList = document.getElementById('certificatesList');
               certificatesList.innerHTML = ''; // Clear previous content
 
-              if (student.certificate_id && student.certificate_id.length > 0) {
-                const li = document.createElement('li');
-                li.innerHTML = '<strong>Certificates:</strong> ';
+              if (student.certificates && student.certificates.length > 0) {
+                student.certificates.forEach(function (certificate) {
+                  const li = document.createElement('li');
+                  li.innerHTML = '<strong>Certificate ID:</strong> ' + certificate;
+                  certificatesList.appendChild(li);
+                });
               } else {
                 // Display a message when no certificates are found
                 const li = document.createElement('li');

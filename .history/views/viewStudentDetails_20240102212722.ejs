@@ -96,47 +96,54 @@
               const certificatesList = document.getElementById('certificatesList');
               certificatesList.innerHTML = ''; // Clear previous content
 
-              if (student.certificate_id && student.certificate_id.length > 0) {
-                const li = document.createElement('li');
-                li.innerHTML = '<strong>Certificates:</strong> ';
+              if (student.certificates && student.certificates.length > 0) {
+                student.certificates.forEach(function (certificate) {
+                  const li = document.createElement('li');
+                  li.innerHTML = '<strong>Certificate ID:</strong> ' + certificate;
+                  certificatesList.appendChild(li);
+                });
+
+                // Display student table
+                const studentTableBody = document.getElementById('studentTableBody');
+                studentTableBody.innerHTML = ''; // Clear previous content
+                let serialNumber = 1;
+  
+                if (student.certificate_id && student.certificate_id.length > 0) {
+                  student.certificate_id.forEach(function (certificate_id) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                      <td>${serialNumber++}</td>
+                      <td>${certificate_id}</td>
+                      <td>
+                        <form action="/download-certificate" method="post" style="display: inline-block">
+                          <input type="hidden" name="certificatePath" value="${student.certificate_path[student.certificate_id.indexOf(certificate_id)]}">
+                          <input type="hidden" name="certificateId" value="${certificate_id}">
+                          <button type="submit">Download</button>
+                        </form>
+                        <form action="/view-certificate" method="post" target="_blank" style="display: inline-block">
+                          <input type="hidden" name="certificatePath" value="${student.certificate_path[student.certificate_id.indexOf(certificate_id)]}">
+                          <input type="hidden" name="certificateId" value="${certificate_id}">
+                          <button type="submit">View</button>
+                        </form>
+                      </td>
+                    `;
+                    studentTableBody.appendChild(tr);
+                  });
+                }
+
+                // Display student table only if there are certificates
+                const studentTable = document.getElementById('studentTable');
+                studentTable.style.display = (serialNumber > 1) ? 'table' : 'none';
               } else {
                 // Display a message when no certificates are found
                 const li = document.createElement('li');
                 li.innerHTML = '<strong>No certificates found for this student.</strong>';
                 certificatesList.appendChild(li);
-              }
-  
-              // Display student table
-              const studentTableBody = document.getElementById('studentTableBody');
-              studentTableBody.innerHTML = ''; // Clear previous content
-              let serialNumber = 1;
-  
-              if (student.certificate_id && student.certificate_id.length > 0) {
-                student.certificate_id.forEach(function (certificate_id) {
-                  const tr = document.createElement('tr');
-                  tr.innerHTML = `
-                    <td>${serialNumber++}</td>
-                    <td>${certificate_id}</td>
-                    <td>
-                      <form action="/download-certificate" method="post" style="display: inline-block">
-                        <input type="hidden" name="certificatePath" value="${student.certificate_path[student.certificate_id.indexOf(certificate_id)]}">
-                        <input type="hidden" name="certificateId" value="${certificate_id}">
-                        <button type="submit">Download</button>
-                      </form>
-                      <form action="/view-certificate" method="post" target="_blank" style="display: inline-block">
-                        <input type="hidden" name="certificatePath" value="${student.certificate_path[student.certificate_id.indexOf(certificate_id)]}">
-                        <input type="hidden" name="certificateId" value="${certificate_id}">
-                        <button type="submit">View</button>
-                      </form>
-                    </td>
-                  `;
-                  studentTableBody.appendChild(tr);
-                });
-              }
 
-              // Display student table only if there are certificates
-              const studentTable = document.getElementById('studentTable');
-              studentTable.style.display = (serialNumber > 1) ? 'table' : 'none';
+                // You may choose to hide the student table here if needed
+                const studentTable = document.getElementById('studentTable');
+                studentTable.style.display = 'none';
+              }
             } else {
               // If no records found, display a message and clear the roll number
               document.getElementById('noRecords').style.display = 'block';
