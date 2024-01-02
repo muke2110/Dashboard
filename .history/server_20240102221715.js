@@ -112,7 +112,7 @@ app.get('/admin_Dashboard', async(req, res) => {
 
 app.get('/admin_Dashboard/viewStudentDetails', (req, res) => {
     // Render the "viewStudentDetails" EJS file
-    //res.render('viewStudentDetails');
+    res.render('viewStudentDetails');
     try {
         const token = req.cookies['uid'];
         if (token) {
@@ -126,7 +126,7 @@ app.get('/admin_Dashboard/viewStudentDetails', (req, res) => {
                     const admin = await adminInfo(decoded.roll_number, res);
                     res.render('viewStudentDetails');
                 }
-            });
+            });z
         } 
         else {
             // No token found, render the login page

@@ -112,30 +112,7 @@ app.get('/admin_Dashboard', async(req, res) => {
 
 app.get('/admin_Dashboard/viewStudentDetails', (req, res) => {
     // Render the "viewStudentDetails" EJS file
-    //res.render('viewStudentDetails');
-    try {
-        const token = req.cookies['uid'];
-        if (token) {
-            // Verify the token
-            jwt.verify(token, secretKey, async (err, decoded) => {
-                if (err) {
-                    // If token is not valid, render the login page
-                    res.render('login');
-                }               
-                else if(decoded.role === 'admin'){
-                    const admin = await adminInfo(decoded.roll_number, res);
-                    res.render('viewStudentDetails');
-                }
-            });
-        } 
-        else {
-            // No token found, render the login page
-            res.redirect('/');
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
+    res.render('viewStudentDetails');
 });
 
 
