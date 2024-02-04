@@ -1,0 +1,69 @@
+<!-- view-issues.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <title>Admin Dashboard - View Issues</title>
+  <link rel="stylesheet" href="issues.css">
+</head>
+<body>
+  <h1>Admin Dashboard - View Issues</h1>
+
+  <% if (issues.length > 0) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Certificate Type</th>
+          <th>Date</th>
+          <th>Action</th>
+          <!-- Add any other fields you want to display -->
+        </tr>
+      </thead>
+      <tbody>
+        <% issues.forEach((issue, index) => { %>
+          <tr>
+            <td><%= issue.title %></td>
+            <td><%= issue.description %></td>
+            <td><%= issue.certificateType %></td>
+            <td><%= new Date(issue.timestamp).toDateString() %></td>
+            <td>
+              <button onclick="deleteIssue('<%= issue._id %>',<%= index %>)">Delete</button>
+              <button onclick="deleteIssue('<%= issue._id %>')">Delete</button>
+            </td>
+            <!-- Add any other fields you want to display -->
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No reported issues at the moment.</p>
+  <% } %>
+
+  <a href="/">Back to Dashboard</a>
+
+  <script>
+    function deleteIssue(issueId, rowIndex) {
+      fetch(`/delete-issue/${issueId}`, {
+        method: 'DELETE',
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+
+        // If the delete operation is successful, remove the row from the table
+        if (data.success) {
+          const table = document.querySelector('table');
+          table.deleteRow(rowIndex + 1); // Adding 1 because of the header row
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+  </script>
+</body>
+</html>

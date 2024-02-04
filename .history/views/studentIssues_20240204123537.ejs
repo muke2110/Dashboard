@@ -1,0 +1,32 @@
+<!-- view-issues.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - View Issues</title>
+  <link rel="stylesheet" href="issues.css">
+</head>
+<body>
+  <h1>Admin Dashboard - View Issues</h1>
+
+  <% if (issues.length > 0) { %>
+    <ul>
+      <% issues.forEach(issue => { %>
+        <li>
+          <strong>Title:</strong> <%= issue.title %><br>
+          <strong>Description:</strong> <%= issue.description %><br>
+          <strong>Certificate Type:</strong> <%= issue.certificateType %><br>
+          <strong>Date:</strong> <%= issue.date.toDateString() %>
+          <!-- Add any other fields you want to display -->
+        </li>
+      <% }); %>
+    </ul>
+  <% } else { %>
+    <p>No reported issues at the moment.</p>
+  <% } %>
+
+  <a href="/">Back to Dashboard</a>
+</body>
+</html>
