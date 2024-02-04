@@ -1,0 +1,54 @@
+<!-- view-issues.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <title>Admin Dashboard - View Issues</title>
+  <link rel="stylesheet" href="issues.css">
+</head>
+<body>
+  <header>
+    <a href="/" style="text-decoration: none; color: white;"><button>&lt; Back to Dashboard</button></a>
+    <h1>Admin Dashboard - View Issues</h1>
+  </header>
+  <% if (issues.length > 0) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Student Roll</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Certificate Type</th>
+          <th>Date</th>
+          <th>Action</th>
+          <!-- Add any other fields you want to display -->
+        </tr>
+      </thead>
+      <tbody>
+        <% issues.forEach((issue, index) => { %>
+          <tr>
+            <td><%= issue.></td>
+            <td><%= issue.title %></td>
+            <td><%= issue.description %></td>
+            <td><%= issue.certificateType %></td>
+            <td><%= new Date(issue.timestamp).toDateString() %></td>
+            <td>
+              <form method="POST" action="/delete-issue/<%= issue._id %>">
+                <input type="hidden" name="_method" value="DELETE">
+                <button class="delete-button" type="submit">Delete</button>
+              </form>
+            </td>
+            <!-- Add any other fields you want to display -->
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No reported issues at the moment.</p>
+  <% } %>
+</body>
+</html>
