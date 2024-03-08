@@ -18,7 +18,6 @@
     <% if (successMessage) { %>
     <script>
       alert("<%= successMessage %>");
-      history.replaceState({}, document.title, window.location.pathname);
     </script>
     <% } %>
     <form id="logoutForm" action="/logout" method="get">

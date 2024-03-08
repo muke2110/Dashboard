@@ -509,7 +509,7 @@ app.post('/register', async (req, res) => {
         }
     }
 });
-//ADMIN CAN DELETE ISSUE WHICH IS CREATED BY STUDENT 
+//ADMIN CAN DELETE ISSUE WHICH IS 
 app.post('/delete-issue/:id', async (req, res) => {
     try {
       const deletedIssue = await issueForm.findByIdAndDelete(req.params.id);

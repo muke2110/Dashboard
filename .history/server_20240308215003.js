@@ -295,7 +295,7 @@ app.post('/submit-issue', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-//STUDENT CAN DOWNLOAD THEIR CERTIFICATES
+//STUDENT CAN DO
 app.post('/download-certificate', (req, res) => {
     try {
       const certificatePath = req.body.certificatePath;
@@ -313,7 +313,7 @@ app.post('/download-certificate', (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-//ADMIN PRIVILEGE TO UPLOAD CERTIFICATE TO RESPECTED STUDENT
+
 app.post('/UploadRecords', (req, res, next) => {
     upload.single("file")(req, res, async function (err) {
         let errors = [];
@@ -359,7 +359,7 @@ app.post('/UploadRecords', (req, res, next) => {
         return res.redirect('/admin_Dashboard');
     });
 });
-//LOGIN PAGE FOR USERS (STUDENT or ADMIN)
+
 app.post('/users/login', async (req, res) => {
     try {
         if (req.body.role === 'student') {
@@ -449,7 +449,7 @@ app.post('/users/login', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-//REGISTRATION FOR BOTH STUDENT OR ADMIN
+
 app.post('/register', async (req, res) => {
     let { username,roll_number, email, password, password2 , role} = req.body;
     let errors = [];
@@ -509,7 +509,7 @@ app.post('/register', async (req, res) => {
         }
     }
 });
-//ADMIN CAN DELETE ISSUE WHICH IS CREATED BY STUDENT 
+
 app.post('/delete-issue/:id', async (req, res) => {
     try {
       const deletedIssue = await issueForm.findByIdAndDelete(req.params.id);

@@ -19,6 +19,7 @@ app.set('views', __dirname + '/views');
 
 //Use this because data is coming in FORM data
 app.use(express.urlencoded({ extended: false }));
+
 app.use(express.static(path.join(__dirname,'views')))
 app.use(express.static('styles'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -28,7 +29,13 @@ app.use('student',student);
 app.use('admin',adminInfo);
 
 
-//GET routes
+
+
+//GET ROUTES
+
+
+
+
 //REDIRECTS TO RESPECTED DASHBOARDS
 app.get("/", async (req, res) => {
     try {
@@ -63,6 +70,7 @@ app.get("/", async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 //logout REST API
 app.get("/logout", (req, res) => {
     try {
@@ -73,10 +81,12 @@ app.get("/logout", (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 //Signup REST API
 app.get('/signup', (req, res) => {
     res.render('signup');
 });
+
 //ADMIN DASHBOARD REST API
 app.get('/admin_Dashboard', async(req, res) => {
     try {
@@ -103,6 +113,7 @@ app.get('/admin_Dashboard', async(req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 //ADMIN PRIVILEGE TO CHECK STUDENT CERTIFICATES
 app.get('/admin_Dashboard/viewStudentDetails', (req, res) => {
     try {
@@ -129,6 +140,7 @@ app.get('/admin_Dashboard/viewStudentDetails', (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 //ADMIN LOOKS INTO ANY ISSUES FACED BY STUDENT
 app.get('/student-Issues', async(req, res) => {
     try {
@@ -144,7 +156,7 @@ app.get('/student-Issues', async(req, res) => {
                     // Assuming you fetch issues from MongoDB and store them in the `issues` variable
                     const issues = await issueForm.find().sort({ date: -1 });
                     console.log(issues);
-                    // Render the studentIssues.ejs template and pass the issues variable
+                    // Render the view-issues.ejs template and pass the issues variable
                     res.render('studentIssues', { issues });
                 } else {
                     res.status(500).send('Access Denied')
@@ -160,6 +172,7 @@ app.get('/student-Issues', async(req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 //STUDENT DASHBOARD REST API
 app.get('/student_Dashboard', async (req, res) => {
     try {
@@ -189,6 +202,9 @@ app.get('/student_Dashboard', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
+
 //STUDENT REPORTS ISSUES
 app.get('/report-issue', (req, res) => {
     try {
@@ -222,9 +238,11 @@ app.get('/report-issue', (req, res) => {
 
 
 
+
 //POST ROUTES
 
-//ADMIN PRIVILEGE FOR ViewStudentDetails
+
+
 app.post('/admin_Dashboard/viewStudentDetails', async (req, res) => {
     try {
       const roll_number = req.body.roll_number;
@@ -241,7 +259,8 @@ app.post('/admin_Dashboard/viewStudentDetails', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-//STUDENTS GETS THEIR CERTIFICATES
+
+
 app.post('/view-certificate', (req, res) => {
     try {
       // Retrieve certificate path and certificate ID from the request
@@ -258,7 +277,8 @@ app.post('/view-certificate', (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-//STUDENT CAN SUBMIT THERE ISSUES
+
+// Define route to handle form submission
 app.post('/submit-issue', async (req, res) => {
     try {
         // Extract JWT token from cookie
@@ -295,7 +315,9 @@ app.post('/submit-issue', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-//STUDENT CAN DOWNLOAD THEIR CERTIFICATES
+
+  
+
 app.post('/download-certificate', (req, res) => {
     try {
       const certificatePath = req.body.certificatePath;
@@ -313,7 +335,8 @@ app.post('/download-certificate', (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-//ADMIN PRIVILEGE TO UPLOAD CERTIFICATE TO RESPECTED STUDENT
+
+
 app.post('/UploadRecords', (req, res, next) => {
     upload.single("file")(req, res, async function (err) {
         let errors = [];
@@ -359,7 +382,8 @@ app.post('/UploadRecords', (req, res, next) => {
         return res.redirect('/admin_Dashboard');
     });
 });
-//LOGIN PAGE FOR USERS (STUDENT or ADMIN)
+
+
 app.post('/users/login', async (req, res) => {
     try {
         if (req.body.role === 'student') {
@@ -449,7 +473,8 @@ app.post('/users/login', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-//REGISTRATION FOR BOTH STUDENT OR ADMIN
+
+
 app.post('/register', async (req, res) => {
     let { username,roll_number, email, password, password2 , role} = req.body;
     let errors = [];
@@ -509,7 +534,8 @@ app.post('/register', async (req, res) => {
         }
     }
 });
-//ADMIN CAN DELETE ISSUE WHICH IS CREATED BY STUDENT 
+
+
 app.post('/delete-issue/:id', async (req, res) => {
     try {
       const deletedIssue = await issueForm.findByIdAndDelete(req.params.id);
@@ -518,7 +544,7 @@ app.post('/delete-issue/:id', async (req, res) => {
       }
   
       // Redirect back to the view-issues page after deletion
-      res.redirect('/student-Issues');
+      res.redirect('/studentIssues');
     } catch (error) {
       console.error(error);
       res.status(500).json({ success: false, error: 'Internal Server Error' });

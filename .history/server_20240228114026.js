@@ -19,6 +19,7 @@ app.set('views', __dirname + '/views');
 
 //Use this because data is coming in FORM data
 app.use(express.urlencoded({ extended: false }));
+
 app.use(express.static(path.join(__dirname,'views')))
 app.use(express.static('styles'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -28,7 +29,13 @@ app.use('student',student);
 app.use('admin',adminInfo);
 
 
-//GET routes
+
+
+//GET ROUTES
+
+
+
+
 //REDIRECTS TO RESPECTED DASHBOARDS
 app.get("/", async (req, res) => {
     try {
@@ -63,6 +70,7 @@ app.get("/", async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 //logout REST API
 app.get("/logout", (req, res) => {
     try {
@@ -73,10 +81,12 @@ app.get("/logout", (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 //Signup REST API
 app.get('/signup', (req, res) => {
     res.render('signup');
 });
+
 //ADMIN DASHBOARD REST API
 app.get('/admin_Dashboard', async(req, res) => {
     try {
@@ -103,6 +113,7 @@ app.get('/admin_Dashboard', async(req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 //ADMIN PRIVILEGE TO CHECK STUDENT CERTIFICATES
 app.get('/admin_Dashboard/viewStudentDetails', (req, res) => {
     try {
@@ -129,8 +140,9 @@ app.get('/admin_Dashboard/viewStudentDetails', (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 //ADMIN LOOKS INTO ANY ISSUES FACED BY STUDENT
-app.get('/student-Issues', async(req, res) => {
+app.get('/studentIssues', async(req, res) => {
     try {
         const token = req.cookies['uid'];
         if (token) {
@@ -144,7 +156,7 @@ app.get('/student-Issues', async(req, res) => {
                     // Assuming you fetch issues from MongoDB and store them in the `issues` variable
                     const issues = await issueForm.find().sort({ date: -1 });
                     console.log(issues);
-                    // Render the studentIssues.ejs template and pass the issues variable
+                    // Render the view-issues.ejs template and pass the issues variable
                     res.render('studentIssues', { issues });
                 } else {
                     res.status(500).send('Access Denied')
@@ -160,8 +172,9 @@ app.get('/student-Issues', async(req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 //STUDENT DASHBOARD REST API
-app.get('/student_Dashboard', async (req, res) => {
+app.get('/student_Dashboard',(req,res)=>{
     try {
         const token = req.cookies['uid'];
         if (token) {
@@ -172,11 +185,11 @@ app.get('/student_Dashboard', async (req, res) => {
                     res.redirect('login');
                 } else {
                     // For student details
+                    //console.log(decoded);
+                    // Token is valid, check the role and redirect to the respective dashboard
                     if (decoded.role === 'student') {
                         const students = await student(decoded.roll_number, res);
-                        // Check if 'success' query parameter is true and include a successMessage
-                        const success = req.query.success === 'true';
-                        res.render('student_Dashboard', { students, roll_number: decoded.roll_number, successMessage: success ? 'Issue reported successfully!' : null });
+                        res.render('student_Dashboard', { students, roll_number: decoded.roll_number });
                     }
                 }
             });
@@ -188,7 +201,8 @@ app.get('/student_Dashboard', async (req, res) => {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
-});
+})
+
 //STUDENT REPORTS ISSUES
 app.get('/report-issue', (req, res) => {
     try {
@@ -222,9 +236,11 @@ app.get('/report-issue', (req, res) => {
 
 
 
+
 //POST ROUTES
 
-//ADMIN PRIVILEGE FOR ViewStudentDetails
+
+
 app.post('/admin_Dashboard/viewStudentDetails', async (req, res) => {
     try {
       const roll_number = req.body.roll_number;
@@ -241,7 +257,8 @@ app.post('/admin_Dashboard/viewStudentDetails', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-//STUDENTS GETS THEIR CERTIFICATES
+
+
 app.post('/view-certificate', (req, res) => {
     try {
       // Retrieve certificate path and certificate ID from the request
@@ -258,44 +275,35 @@ app.post('/view-certificate', (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-//STUDENT CAN SUBMIT THERE ISSUES
-app.post('/submit-issue', async (req, res) => {
-    try {
-        // Extract JWT token from cookie
-        const token = req.cookies.uid;
-        // Check if token exists
-        if (!token) {
-            return res.redirect('/');
-        }
-        // Verify JWT to ensure user is logged in
-        const decodedToken = jwt.verify(token, secretKey); // Replace 'your_secret_key' with your actual secret key
 
-        // Extract roll_number from decoded token
-        const roll_number = decodedToken.roll_number;
 
-        // Create a new issue document
-        const newIssue = new issueForm({
-            roll_number: roll_number,
-            title: req.body.title,
-            description: req.body.description,
-            certificateType: req.body.certificateType
-        });
-
-        // Save the new issue document to the database
-        await newIssue.save();
-
-        // Redirect to student dashboard
-        res.redirect('/student_Dashboard?success=true');
-    } catch (error) {
-        // Handle errors
-        console.error('Error:', error);
-        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-            return res.redirect('/');
-        }
-        res.status(500).json({ error: 'Internal server error' });
+app.post('/submit-issue', (req, res) => {
+    console.log(req.body);
+    const token = req.cookies['uid'];
+    const decodedToken = jwt.verify(token, secretKey);
+    req.user = decodedToken.roll_number;
+    const { title, description, certificateType } = req.body;
+    const roll_number = req.user;
+    if (!roll_number || !title || !description || !certificateType) {
+      res.status(400).json({ error: 'All fields are required' });
+      return;
     }
-});
-//STUDENT CAN DOWNLOAD THEIR CERTIFICATES
+  
+    const newIssue = new issueForm({roll_number ,title, description, certificateType });
+
+    console.log(newIssue);
+
+    newIssue.save()
+      .then(() => {
+        res.redirect('/');
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      });
+});  
+  
+
 app.post('/download-certificate', (req, res) => {
     try {
       const certificatePath = req.body.certificatePath;
@@ -313,7 +321,8 @@ app.post('/download-certificate', (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-//ADMIN PRIVILEGE TO UPLOAD CERTIFICATE TO RESPECTED STUDENT
+
+
 app.post('/UploadRecords', (req, res, next) => {
     upload.single("file")(req, res, async function (err) {
         let errors = [];
@@ -359,7 +368,8 @@ app.post('/UploadRecords', (req, res, next) => {
         return res.redirect('/admin_Dashboard');
     });
 });
-//LOGIN PAGE FOR USERS (STUDENT or ADMIN)
+
+
 app.post('/users/login', async (req, res) => {
     try {
         if (req.body.role === 'student') {
@@ -449,7 +459,8 @@ app.post('/users/login', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-//REGISTRATION FOR BOTH STUDENT OR ADMIN
+
+
 app.post('/register', async (req, res) => {
     let { username,roll_number, email, password, password2 , role} = req.body;
     let errors = [];
@@ -509,7 +520,8 @@ app.post('/register', async (req, res) => {
         }
     }
 });
-//ADMIN CAN DELETE ISSUE WHICH IS CREATED BY STUDENT 
+
+
 app.post('/delete-issue/:id', async (req, res) => {
     try {
       const deletedIssue = await issueForm.findByIdAndDelete(req.params.id);
@@ -518,7 +530,7 @@ app.post('/delete-issue/:id', async (req, res) => {
       }
   
       // Redirect back to the view-issues page after deletion
-      res.redirect('/student-Issues');
+      res.redirect('/studentIssues');
     } catch (error) {
       console.error(error);
       res.status(500).json({ success: false, error: 'Internal Server Error' });

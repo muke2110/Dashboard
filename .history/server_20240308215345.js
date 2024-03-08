@@ -449,7 +449,7 @@ app.post('/users/login', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-//REGISTRATION FOR BOTH STUDENT OR ADMIN
+//REGISTER 
 app.post('/register', async (req, res) => {
     let { username,roll_number, email, password, password2 , role} = req.body;
     let errors = [];
@@ -509,7 +509,7 @@ app.post('/register', async (req, res) => {
         }
     }
 });
-//ADMIN CAN DELETE ISSUE WHICH IS CREATED BY STUDENT 
+
 app.post('/delete-issue/:id', async (req, res) => {
     try {
       const deletedIssue = await issueForm.findByIdAndDelete(req.params.id);

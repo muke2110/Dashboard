@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="/Student.css">
+  <title>STUDENT DASHBOARD</title>
+</head>
+<body>
+  
+  <form id="logoutForm" action="/logout" method="get">
+    <button type="submit"><i class="material-icons">logout</i> Log Out</button>
+  </form> 
+
+  <div class="dashboard-container"> 
+    <div class="top-bar">
+      <h1>STUDENT DASHBOARD</h1>  
+    </div>
+
+    <div class="student-info">
+      <strong>Roll Number:</strong> <%= students.length > 0 ? students[0].roll_number : '' %>
+    </div>
+
+    <div class="options-container">
+      <div class="certificate-type">
+        <label for="certificate-type">Certificate Types:</label>
+        <select id="certificate-type">
+          <option value="cert1">CEA/NSS/National Initiatives</option>
+          <option value="cert2">Sports And Game</option>
+          <option value="cert1">Cultural Activities</option>
+          <option value="cert2">Women's form activities</option>
+          <option value="cert1">Hobby clubs Activities</option>
+          <option value="cert2">Professional society Activities</option>
+          <option value="cert1">DEpt. Students Association Activities</option>
+          <option value="cert2">Technical Club Activities</option>
+          <option value="cert2">Innovation and Incubation Cell Activities</option>
+          <option value="cert1">Professional Self Initiatives</option>
+          <option value="cert2">Others</option>
+          <!-- Add other certificate options -->
+        </select>
+      </div>
+
+      <div class="date-filter-container">
+        <div>
+          <label for="start-date">Start Date:</label>
+          <input type="date" id="start-date">
+        </div>
+
+        <div>
+          <label for="end-date">End Date:</label>
+          <input type="date" id="end-date">
+        </div>
+
+        <div class="search-container">
+          <label for="search-bar"><img src="search-icon.png" alt="Search"></label>
+          <input type="text" placeholder="Search..." id="search-bar">
+        </div>
+      </div>
+    </div>
+
+    <table class="student-table">
+      <thead>
+        <tr>
+          <th>Serial Number</th>
+          <th>Certification ID</th>
+          <th>Certificates</th>
+        </tr>
+      </thead>
+      <% let serialNumber = 1; %>
+      <% if (students && students.length > 0) { %>
+        <tbody>
+          <% for (var i = 0; i < students.length; i++) { %>
+            <!-- Check if student.certificate_id is defined before iterating -->
+            <% if (students[i] && students[i].certificate_id && students[i].certificate_id.length > 0) { %>
+              <% students[i].certificate_id.forEach((certificate_id) => { %>
+                <tr>
+                  <td><%= serialNumber++; %></td>
+                  <td><%= certificate_id %></td>
+                  <td>
+                    <form action="/download-certificate" method="post" style="display: inline-block">
+                      <input type="hidden" name="certificatePath" value="<%= students[i].certificate_path[students[i].certificate_id.indexOf(certificate_id)] %>">
+                      <input type="hidden" name="certificateId" value="<%= certificate_id %>">
+                      <button type="submit">Download</button>
+                    </form>
+                    <form action="/view-certificate" method="post" target="_blank" style="display: inline-block">
+                      <input type="hidden" name="certificatePath" value="<%= students[i].certificate_path[students[i].certificate_id.indexOf(certificate_id)] %>">
+                      <input type="hidden" name="certificateId" value="<%= certificate_id %>">
+                      <button type="submit">View</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } %>
+          <% } %>
+        </tbody>
+      <% } %>
+    </table>
+
+    <a href="/report-issue">Report an Issue</a>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
