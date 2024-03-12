@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Excel Sheet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="upload">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="top-bar">
+            <h1>Upload Excel Sheet</h1>
+            <form id="logoutForm" action="/logout" method="get">
+                <button type="submit"><i class="material-icons">logout</i> Log Out</button>
+            </form>
+        </div>
+        
+        <form action="/admin_Dashboard/uploadCertificates" method="post" enctype="multipart/form-data" class="upload-form">
+            <input type="file" name="file" required>
+            <button type="submit"><i class="material-icons">cloud_upload</i> Upload</button>
+        </form>
+    </div>
+</body>
+</html>
