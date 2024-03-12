@@ -329,7 +329,7 @@ app.post('/admin_Dashboard/uploadCertificates', upload.single('file'), async (re
                     certificate_type: eventName // You can modify this as needed
                 } }
             );
-            console.log(`Updated on ${roll_number} Data`)
+            console.log(``)
         }
         console.log("All files generated certificates");
         res.send('Certificates generated, sent, and uploaded successfully.');

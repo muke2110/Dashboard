@@ -283,6 +283,7 @@ app.post('/admin_Dashboard/uploadCertificates', upload.single('file'), async (re
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const data = xlsx.utils.sheet_to_json(sheet);
+        console.log(data);
         
         // Iterate over each entry in the Excel data
         for (let index = 0; index < data.length; index++) {
@@ -294,8 +295,6 @@ app.post('/admin_Dashboard/uploadCertificates', upload.single('file'), async (re
 
             // Create a new PDF document for each entry
             const pdfPath = path.join(__dirname, 'Records', `${uniqueSuffix}.pdf`);
-            const relativePdfPath = path.relative(__dirname, pdfPath);
-            console.log(relativePdfPath)
             const doc = new PDFDocument();
             doc.pipe(fs.createWriteStream(pdfPath));
 
@@ -323,13 +322,12 @@ app.post('/admin_Dashboard/uploadCertificates', upload.single('file'), async (re
             await collection_student.updateOne(
                 { roll_number: `${roll_number}` },
                 { $push: { 
-                    certificate_path: `${relativePdfPath}`,
+                    certificate_path: `${pdfPath}`,
                     certificate_id: `${uniqueSuffix}`,
                     certificate_date: new Date(), // Assuming current date
                     certificate_type: eventName // You can modify this as needed
                 } }
             );
-            console.log(`Updated on ${roll_number} Data`)
         }
         console.log("All files generated certificates");
         res.send('Certificates generated, sent, and uploaded successfully.');
@@ -446,7 +444,7 @@ app.post('/UploadRecords', (req, res, next) => {
             const type = req.body.certificate_type;
             // console.log(id);
             // console.log('File Mimetype:', req.file.mimetype);
-            console.log(path);
+            console.log()
             
             console.log("Valid Student");
             await collection_student.updateOne(

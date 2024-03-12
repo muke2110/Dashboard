@@ -283,6 +283,7 @@ app.post('/admin_Dashboard/uploadCertificates', upload.single('file'), async (re
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const data = xlsx.utils.sheet_to_json(sheet);
+        console.log(data);
         
         // Iterate over each entry in the Excel data
         for (let index = 0; index < data.length; index++) {
@@ -323,13 +324,12 @@ app.post('/admin_Dashboard/uploadCertificates', upload.single('file'), async (re
             await collection_student.updateOne(
                 { roll_number: `${roll_number}` },
                 { $push: { 
-                    certificate_path: `${relativePdfPath}`,
+                    certificate_path: `${pdfPath}`,
                     certificate_id: `${uniqueSuffix}`,
                     certificate_date: new Date(), // Assuming current date
                     certificate_type: eventName // You can modify this as needed
                 } }
             );
-            console.log(`Updated on ${roll_number} Data`)
         }
         console.log("All files generated certificates");
         res.send('Certificates generated, sent, and uploaded successfully.');
