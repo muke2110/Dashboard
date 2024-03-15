@@ -159,6 +159,51 @@
 
 
       //searching by DATES
+
+
+      function formatDate(date) {
+        const day = date.getDate().toString(); // Ensure two-digit day
+        const month = (date.getMonth() + 1).toString(); // Ensure two-digit month
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      }
+      
+      function performSearch() {
+        // Get reference to the search button and date input fields
+        const startDateInput = document.getElementById("start-date");
+        const endDateInput = document.getElementById("end-date");
+        const certificateType = document.getElementById("certificate-type").value.toLowerCase();
+      
+        // Convert dates to Date objects
+        const startDate = new Date(startDateInput.value);
+        const endDate = new Date(endDateInput.value);
+      
+        // Format dates
+        const formattedStartDate = formatDate(startDate);
+        const formattedEndDate = formatDate(endDate);
+        console.log(formattedStartDate)
+        console.log(formattedEndDate)
+
+        // Get all table rows except the header row
+        const rows = document.querySelectorAll(".student-table tbody tr");
+      
+        // Loop through each row and hide/show based on criteria
+        rows.forEach(row => {
+          const certificateDate = new Date(row.cells[3].textContent);
+          const formattedCertificateDate = formatDate(certificateDate);
+
+          
+          if (
+            formattedCertificateDate >= formattedStartDate &&
+            formattedCertificateDate <= formattedEndDate &&
+            row.cells[2].textContent.toLowerCase() === certificateType
+          ) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        });
+      }
       
     </script>
   </body>

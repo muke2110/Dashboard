@@ -270,7 +270,7 @@ app.post('/admin_Dashboard/viewStudentDetails', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-//ADMIN PRIVILEGE FOR Upload Bulk Certificate
+//ADMIN 
 app.post('/admin_Dashboard/uploadCertificates', upload.single('file'), async (req, res) => {
     try {
         // Ensure a file was uploaded
@@ -624,9 +624,8 @@ app.post('/delete-issue/:id', async (req, res) => {
       res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 });
+  
 
-
-//APP LISTENER
 app.listen(port, () => {
     console.log(`Server is running at ${port}`);
 });

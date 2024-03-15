@@ -68,7 +68,7 @@
             <label for="end-date">End Date:</label>
             <input type="date" id="end-date" />
           </div>
-          <button id="search-button" onclick="performSearch()">Search</button>
+          <button id="search-button">Search</button>
 
           <div class="search-container">
             <label for="search-bar"
@@ -159,7 +159,39 @@
 
 
       //searching by DATES
-      
+
+      function performSearch() {
+        // Get reference to the search button and date input fields
+        const startDateInput = document.getElementById("start-date");
+        const endDateInput = document.getElementById("end-date");
+        const certificateType = document.getElementById("certificate-type").value.toLowerCase();
+    
+        // Convert dates to Date objects
+        const startDate = new Date(startDateInput.value);
+        const endDate = new Date(endDateInput.value);
+    
+        // Get all table rows except the header row
+        const rows = document.querySelectorAll(".student-table tbody tr");
+    
+        // Loop through each row and hide/show based on criteria
+        rows.forEach(row => {
+          const certificateDate = new Date(row.cells[3].textContent);
+    
+          if (
+            certificateDate >= startDate && 
+            certificateDate <= endDate && 
+            row.cells[2].textContent.toLowerCase() === certificateType
+          ) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        });
+      }
+    
+      // Add event listener to the search button
+      const searchButton = document.getElementById("search-button");
+      searchButton.addEventListener("click", performSearch);
     </script>
   </body>
 </html>

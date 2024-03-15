@@ -60,7 +60,7 @@
 
         <div class="date-filter-container">
           <div>
-            <label for="start-date">Start Date:</label>
+            <label for="start-date" >Start Date:</label>
             <input type="date" id="start-date" />
           </div>
 
@@ -68,7 +68,7 @@
             <label for="end-date">End Date:</label>
             <input type="date" id="end-date" />
           </div>
-          <button id="search-button" onclick="performSearch()">Search</button>
+          <button id="search-button">Search</button>
 
           <div class="search-container">
             <label for="search-bar"
@@ -159,7 +159,37 @@
 
 
       //searching by DATES
+
+      const searchButton = document.getElementById("search-button");
+      const startDateInput = document.getElementById("start-date");
+      const endDateInput = document.getElementById("end-date");
+    
+      // Add event listener to the search button
+      searchButton.addEventListener("click", function() {
+        const startDate = new Date(startDateInput.value); // Convert to Date object
+        const endDate = new Date(endDateInput.value); // Convert to Date object
+    
+        console.log("Start Date:", startDate); // Debugging statement
+        console.log("End Date:", endDate); // Debugging statement
       
+        // Get the selected certificate type
+        const certificateType = document.getElementById("certificate-type").value.toLowerCase();
+    
+        // Get all table rows except the table header row
+        const rows = document.querySelectorAll(".student-table tbody tr");
+    
+        // Loop through each row and check if it falls within the selected date range and matches the selected certificate type
+        rows.forEach(row => {
+          const certificateDate = new Date(row.cells[3].textContent); // Convert to Date object
+    
+          // If the row's certificate date falls within the selected date range and matches the selected certificate type, display it, otherwise hide it
+          if (certificateDate >= startDate && certificateDate <= endDate && row.cells[2].textContent.toLowerCase() === certificateType) {
+            row.style.display = ""; // Display the row
+          } else {
+            row.style.display = "none"; // Hide the row
+          }
+        });
+      });
     </script>
   </body>
 </html>

@@ -68,7 +68,6 @@
             <label for="end-date">End Date:</label>
             <input type="date" id="end-date" />
           </div>
-          <button id="search-button" onclick="performSearch()">Search</button>
 
           <div class="search-container">
             <label for="search-bar"
@@ -131,35 +130,7 @@
       <a href="/report-issue">Report an Issue</a>
     </div>
 
-    <script>
-
-      //Searching by Certificate_Id
-      const searchBar = document.getElementById("search-bar");
-
-      // Add event listener to the search input field
-      searchBar.addEventListener("input", function() {
-          const searchQuery = searchBar.value.toLowerCase(); // Get the search query and convert it to lowercase for case-insensitive search
-
-          // Get all table rows except the table header row
-          const rows = document.querySelectorAll(".student-table tbody tr");
-
-          // Loop through each row and check if it contains the search query in "Certification ID" or "Certificate Type" columns
-          rows.forEach(row => {
-              const certificationId = row.cells[1].textContent.toLowerCase(); // Get the text content of Certification ID column
-              const certificateType = row.cells[2].textContent.toLowerCase(); // Get the text content of Certificate Type column
-
-              // If the row contains the search query in "Certification ID" or "Certificate Type" columns, display it, otherwise hide it
-              if (certificationId.includes(searchQuery) || certificateType.includes(searchQuery)) {
-                  row.style.display = ""; // Display the row
-              } else {
-                  row.style.display = "none"; // Hide the row
-              }
-          });
-      });
-
-
-      //searching by DATES
-      
-    </script>
+    <script src="script.js"></script>
+    <script></script>
   </body>
 </html>

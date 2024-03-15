@@ -625,8 +625,6 @@ app.post('/delete-issue/:id', async (req, res) => {
     }
 });
 
-
-//APP LISTENER
 app.listen(port, () => {
     console.log(`Server is running at ${port}`);
 });

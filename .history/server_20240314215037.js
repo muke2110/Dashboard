@@ -33,6 +33,9 @@ app.use('admin',adminInfo);
 
 //GET routes
 //REDIRECTS TO RESPECTED DASHBOARDS
+app.get("*",(req,res)=>{
+    res.json({''})
+})
 app.get("/", async (req, res) => {
     try {
         const token = req.cookies['uid'];

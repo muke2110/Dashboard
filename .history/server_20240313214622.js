@@ -248,9 +248,9 @@ app.get('/report-issue', (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
-
-
+crossOriginIsolated.log
+crossOriginIsolated.log
+crossOriginIsolated.log
 //POST ROUTES
 
 //ADMIN PRIVILEGE FOR ViewStudentDetails

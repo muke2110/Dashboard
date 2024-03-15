@@ -33,6 +33,9 @@ app.use('admin',adminInfo);
 
 //GET routes
 //REDIRECTS TO RESPECTED DASHBOARDS
+app.get("*",(req,res)=>{
+    res.json({message: "This is not an valid "})
+})
 app.get("/", async (req, res) => {
     try {
         const token = req.cookies['uid'];

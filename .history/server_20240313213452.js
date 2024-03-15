@@ -623,10 +623,8 @@ app.post('/delete-issue/:id', async (req, res) => {
       console.error(error);
       res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
-});
+})
 
-
-//APP LISTENER
 app.listen(port, () => {
     console.log(`Server is running at ${port}`);
 });

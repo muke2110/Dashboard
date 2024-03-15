@@ -159,7 +159,34 @@
 
 
       //searching by DATES
-      
+      function performSearch() {
+        const startDateInput = document.getElementById("start-date").value;
+        const endDateInput = document.getElementById("end-date").value;
+    
+        // Convert selected dates to JavaScript Date objects
+        const startDate = parseDate(startDateInput);
+        const endDate = parseDate(endDateInput);
+    
+        const rows = document.querySelectorAll(".student-table tbody tr");
+    
+        rows.forEach(row => {
+            const certificateDateStr = row.cells[3].textContent; // Get certificate date string from table
+            const certificateDate = parseDate(certificateDateStr); // Parse date string to Date object
+    
+            // Check if certificate date is within the selected date range
+            if (certificateDate >= startDate && certificateDate <= endDate) {
+                row.style.display = ""; // Show row if date is within range
+            } else {
+                row.style.display = "none"; // Hide row if date is outside range
+            }
+        });
+    }
+    
+    // Function to parse date string in DD/MM/YYYY format to Date object
+    function parseDate(dateStr) {
+        const [day, month, year] = dateStr.split('/'); // Assuming date format is 'DD/MM/YYYY'
+        return new Date(`${year}-${month}-${day}`); // Create Date object using ISO format (YYYY-MM-DD)
+    }
     </script>
   </body>
 </html>

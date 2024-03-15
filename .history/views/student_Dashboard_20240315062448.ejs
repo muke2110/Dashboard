@@ -159,7 +159,36 @@
 
 
       //searching by DATES
+      function parseDate(dateStr) {
+        const [year, month, day] = dateStr.split('-'); // Assuming date format is 'yyyy-mm-dd'
+        return `${day}/${month}/${year}`;
+      }
       
+      function performSearch() {
+          const startDateInput = document.getElementById("start-date");
+          const endDateInput = document.getElementById("end-date");
+          const certificateType = document.getElementById("certificate-type").value.toLowerCase();
+      
+          const startDate = new Date(startDateInput.value);
+          const endDate = new Date(endDateInput.value);
+      
+          const rows = document.querySelectorAll(".student-table tbody tr");
+      
+          rows.forEach(row => {
+              const certificateDate = new Date(parseDate(row.cells[3].textContent)); // Parse date from table
+              const certificateTypeCell = row.cells[2].textContent.toLowerCase(); // Convert certificate type to lowercase
+      
+              if (
+                  certificateDate >= startDate &&
+                  certificateDate <= endDate &&
+                  certificateTypeCell.includes(certificateType) // Case-insensitive comparison
+              ) {
+                  row.style.display = "";
+              } else {
+                  row.style.display = "none";
+              }
+          });
+      }
     </script>
   </body>
 </html>
