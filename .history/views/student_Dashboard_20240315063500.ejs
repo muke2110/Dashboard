@@ -184,9 +184,10 @@
     
       // Function to parse date string in DD/MM/YYYY format to Date object
       function parseDate(dateStr) {
+      
         const [day, month, year] = dateStr.split('/'); // Assuming date format is 'DD/MM/YYYY'
         return new Date(`${year}-${month}-${day}`); // Create Date object using ISO format (YYYY-MM-DD)
-      }
+        }
     </script>
   </body>
 </html>
