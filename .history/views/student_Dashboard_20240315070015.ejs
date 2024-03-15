@@ -198,21 +198,17 @@
         return dateB - dateA; // Compare in descending order (latest first)
       }
       
-      function updateSerialNumbers() {
-        let serialNumber = 1;
-        const rows = document.querySelectorAll(".student-table tbody tr");
-        rows.forEach(row => {
-          row.cells[0].textContent = serialNumber++;
-        });
-      }
       // Perform initial sorting on page load
       document.addEventListener('DOMContentLoaded', function () {
+        let serialNumber = 1; // Reset serial number
         const rows = document.querySelectorAll(".student-table tbody tr");
         const sortedRows = Array.from(rows).sort(compareDatesDescending); // Sort in descending order (latest first)
         const tbody = document.querySelector('.student-table tbody');
         tbody.innerHTML = ''; // Clear existing rows
-        sortedRows.forEach(row => tbody.appendChild(row)); // Append in reverse order to maintain display order
-        updateSerialNumbers(); // Update serial numbers after sorting
+        sortedRows.forEach(row => {
+            row.cells[0].textContent = serialNumber++; // Update serial number
+            tbody.appendChild(row); // Append in reverse order to maintain display order
+        });
       });
     </script>
   </body>
