@@ -685,76 +685,69 @@ app.post('/verifyAndResetPassword', async (req, res) => {
     const { otp, password, confirmPassword } = req.body;
     const token = req.cookies['Token'];
 
-    // Check if token exists
-    if (!token) {
+    if (token) {
+        jwt.verify(token, secretKey, async (err, decoded) => {
+            if (err) {
+                return res.status(401).send('Invalid token');
+            }
+            
+            const decodedEmail = decoded.email;
+            const role = decoded.role;
+
+            try {
+                let user;
+                if (role === 'student') {
+                    user = await collection_student.findOne({ email: decodedEmail });
+                } else if (role === 'admin') {
+                    user = await collection_admin.findOne({ "roll_number": decodedEmail });
+                } else {
+                    return res.status(400).send('Invalid role');
+                }
+        
+                const isOTPValid = user.resetOTP.includes(otp);
+                if (!isOTPValid) {
+                    return res.status(400).send('Incorrect or expired OTP');
+                }
+        
+                if (password !== confirmPassword) {
+                    return res.status(400).send('Passwords do not match');
+                }
+        
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(password, salt);
+                console.log('Hashed password:', hashedPassword);
+        
+                let updateQuery;
+                if (role === 'student') {
+                    updateQuery = { email: decodedEmail };
+                    const updateResult = await collection_student.updateOne(updateQuery, { $set: { password: hashedPassword } });
+                    console.log('Update result:', updateResult);
+                } else if (role === 'admin') {
+                    updateQuery = { "roll_number": decodedEmail };
+                }
+        
+
+        
+                if (updateResult.nModified === 0) {
+                    return res.status(400).send('Password not updated');
+                }
+        
+                const updatedUser = await collection_student.findOne({ email: decodedEmail });
+                console.log('Updated user:', updatedUser);
+        
+                const updatedOTPArray = user.resetOTP.filter((otpValue) => otpValue !== otp);
+                await collection_student.updateOne({ email: decodedEmail }, { $set: { resetOTP: updatedOTPArray } });
+        
+                res.clearCookie('Token');
+                res.send('Password updated successfully');
+            } catch (error) {
+                console.error(error);
+                res.status(500).send('Server Error');
+            }
+        });
+    } else {
         return res.status(401).send('Token not provided');
     }
-
-    // Verify the token
-    jwt.verify(token, secretKey, async (err, decoded) => {
-        if (err) {
-            return res.status(401).send('Invalid token');
-        }
-        
-        // Extract decoded email and role
-        const decodedEmail = decoded.email;
-        const role = decoded.role;
-
-        try {
-            let user;
-
-            // Find user based on role
-            if (role === 'student') {
-                user = await collection_student.findOne({ email: decodedEmail });
-            } else if (role === 'admin') {
-                user = await collection_admin.findOne({ roll_number: decodedEmail });
-            } else {
-                return res.status(400).send('Invalid role');
-            }
-
-            // Check if user exists
-            if (!user) {
-                return res.status(404).send('User not found');
-            }
-    
-            // Check if OTP is valid
-            const isOTPValid = user.resetOTP.includes(otp);
-            if (!isOTPValid) {
-                return res.status(400).send('Incorrect or expired OTP');
-            }
-    
-            // Check if passwords match
-            if (password !== confirmPassword) {
-                return res.status(400).send('Passwords do not match');
-            }
-    
-            // Hash the new password
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(password, salt);
-            console.log('Hashed password:', hashedPassword);
-    
-            // Update the password in the database based on role
-            let updateQuery;
-            if (role === 'student') {
-                updateQuery = { email: decodedEmail };
-            } else if (role === 'admin') {
-                updateQuery = { roll_number: decodedEmail };
-            }
-            const updateResult = await (role === 'student' ? collection_student : collection_admin).updateOne(updateQuery, { $set: { password: hashedPassword } });
-            console.log('Update result:', updateResult);
-
-            // Filter out the used OTP from the array and update the user document
-            const updatedOTPArray = user.resetOTP.filter((otpValue) => otpValue !== otp);
-            await collection_student.updateOne({ email: decodedEmail }, { $set: { resetOTP: updatedOTPArray } });
-    
-            // Clear the token cookie and send success message
-            res.clearCookie('Token');
-            res.send('Password updated successfully');
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Server Error');
-        }
-    });
 });
 
 

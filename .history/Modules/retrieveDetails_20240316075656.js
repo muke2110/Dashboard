@@ -37,7 +37,7 @@ async function emailRetrieve(role, email, res){
 
       return result
     } else if(role === 'admin'){
-      const result = await collection_admin.find({"roll_number": email})
+      const result = await collection_admin.find({"email": email})
       console.log(result)
       return result
     }
