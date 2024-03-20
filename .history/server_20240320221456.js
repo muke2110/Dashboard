@@ -177,7 +177,7 @@ app.get('/total-app-points', async (req, res) => {
         const roll_number = decoded.roll_number; // Extract UID from decoded token
 
         // Find user by UID and calculate total app points
-        const student = await collection_student.findOne({ roll_number }); 
+
         console.log(student);
         let totalAppPoints = 0;
         if (student) {

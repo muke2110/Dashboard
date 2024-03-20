@@ -168,32 +168,6 @@ app.get('/forgetPassword',(req,res)=>{
 app.get('/verificationPage',(req,res)=>{
     res.render('verificationPage'); // Pass the token to the template
 })
-//comment
-app.get('/total-app-points', async (req, res) => {
-    try {
-        // Extract UID from JWT token
-        const token = req.cookies['uid']; // Assuming token is sent in the Authorization header
-        const decoded = jwt.verify(token, secretKey); // Verify and decode the token
-        const roll_number = decoded.roll_number; // Extract UID from decoded token
-
-        // Find user by UID and calculate total app points
-        const student = await collection_student.findOne({ roll_number }); 
-        console.log(student);
-        let totalAppPoints = 0;
-        if (student) {
-            student.app_points.forEach(points => {
-                totalAppPoints += parseInt(points); // Convert string to number
-            });
-            res.json(totalAppPoints);
-        } else {
-            res.status(404).json({ error: 'User not found' });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-  
 
 //ADMIN LOOKS INTO ANY ISSUES FACED BY STUDENT
 app.get('/student-Issues', async(req, res) => {
@@ -243,7 +217,6 @@ app.get('/student_Dashboard', async (req, res) => {
                         // console.log(students)
                         // Check if 'success' query parameter is true and include a successMessage
                         const success = req.query.success === 'true';
-                        console.log(students[0].app_points.length)
                         res.render('student_Dashboard', { students, roll_number: decoded.roll_number, successMessage: success ? 'Issue reported successfully!' : null });
                     }
                 }
@@ -326,7 +299,7 @@ app.post('/admin_Dashboard/uploadCertificates', upload.single('file'), async (re
         for (let index = 0; index < data.length; index++) {
             const entry = data[index];
             console.log(entry);
-            const { name, email, 'event name': eventName, 'roll number': roll_number, "App Points": app_points } = entry;
+            const { name, email, 'event name': eventName, 'roll number': roll_number, "App Points": } = entry;
 
             const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E5);
 
@@ -364,8 +337,7 @@ app.post('/admin_Dashboard/uploadCertificates', upload.single('file'), async (re
                     certificate_path: `${relativePdfPath}`,
                     certificate_id: `${uniqueSuffix}`,
                     certificate_date: new Date(), // Assuming current date
-                    certificate_type: eventName, // You can modify this as needed
-                    app_points: app_points,
+                    certificate_type: eventName // You can modify this as needed
                 } }
             );
             console.log(`Updated on ${roll_number} Data`)

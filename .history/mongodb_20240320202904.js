@@ -42,8 +42,8 @@ const student = new mongoose.Schema({
         type: [String],
     },
     app_points: {
-        type: [String],
-    },
+        
+    }
     timestamp: {
         type: Date,
         default: Date.now

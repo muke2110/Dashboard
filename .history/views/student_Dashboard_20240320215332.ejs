@@ -41,8 +41,13 @@
         <strong>APP POINTS:</strong>
         <span id="total-app-points">Loading...</span>
       </div>
-      <% let totalAppPoints = students[0].app_points.length %> <!-- Initialize totalAppPoints -->
+      <% let totalAppPoints = 0; %> <!-- Initialize totalAppPoints -->
       <div>
+        <% students.forEach((student, i) => { %>
+          <% student.app_points.forEach((points, index) => { %>
+            <% totalAppPoints += parseInt(points); %>
+          <% }); %>
+        <% }); %>
         <strong>TOTAL CERTIFICATES: </strong><%= totalAppPoints %>
       </div>
       

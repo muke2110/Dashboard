@@ -38,14 +38,8 @@
       </div>
 
       <div class="student-app">
-        <strong>APP POINTS:</strong>
-        <span id="total-app-points">Loading...</span>
+        <strong>APP POINTS:</strong> <%= students.
       </div>
-      <% let totalAppPoints = students[0].app_points.length %> <!-- Initialize totalAppPoints -->
-      <div>
-        <strong>TOTAL CERTIFICATES: </strong><%= totalAppPoints %>
-      </div>
-      
 
       <div class="options-container">
         <div class="certificate-type">
@@ -95,48 +89,47 @@
     }; %>
     
     <table class="student-table">
-      <thead>
-          <tr>
-              <th>Serial Number</th>
-              <th>Certification ID</th>
-              <th>Certificate Type</th>
-              <th>Date of Certificate</th>
-              <th>App Points</th> <!-- New column for app points -->
-              <th>Certificates</th>
-          </tr>
-      </thead>
-      <% let serialNumber = 1; %> 
-      <% if (students && students.length > 0) { %>
-      <tbody>
-          <% for (var i = 0; i < students.length; i++) { %>
-              <% if (students[i] && students[i].certificate_id && students[i].certificate_id.length > 0) { %> 
-                  <% students[i].certificate_id.forEach((certificate_id, index) => { %>
-                      <tr>
-                          <td><%= serialNumber++; %></td>
-                          <td><%= certificate_id %></td>
-                          <td><%= students[i].certificate_type[index] %></td>
-                          <td><%= parseDate(students[i].certificate_date[index]) %></td>
-                          <td><%= students[i].app_points[index] %></td> <!-- Display app points -->
-                          <td>
-                              <form action="/download-certificate" method="post" style="display: inline-block">
-                                  <input type="hidden" name="certificatePath" value="<%= students[i].certificate_path[index] %>">
-                                  <input type="hidden" name="certificateId" value="<%= certificate_id %>">
-                                  <button type="submit">Download</button>
-                              </form>
-                              <form action="/view-certificate" method="post" target="_blank" style="display: inline-block">
-                                  <input type="hidden" name="certificatePath" value="<%= students[i].certificate_path[index] %>">
-                                  <input type="hidden" name="certificateId" value="<%= certificate_id %>">
-                                  <button type="submit">View</button>
-                              </form>
-                          </td>
-                      </tr>
-                  <% }); %> 
-              <% } %> 
-          <% } %>
-      </tbody>
-      <% } %>
-  </table>
-  
+        <thead>
+            <tr>
+                <th>Serial Number</th>
+                <th>Certification ID</th>
+                <th>Certificate Type</th> <!-- New column for certificate type -->
+                <th>Date of Certificate</th>
+                <th>Certificates</th>
+            </tr>
+        </thead>
+        <% let serialNumber = 1; %> 
+        <% if (students && students.length > 0) { %>
+        <tbody>
+            <% for (var i = 0; i < students.length; i++) { %>
+                <% if (students[i] && students[i].certificate_id && students[i].certificate_id.length > 0) { %> 
+                    <% students[i].certificate_id.forEach((certificate_id, index) => { %>
+                        <tr>
+                            <td><%= serialNumber++; %></td>
+                            <td><%= certificate_id %></td>
+                            <!-- Display certificate type corresponding to the current certificate_id -->
+                            <td><%= students[i].certificate_type[index] %></td>
+                            <!-- Display date corresponding to the current certificate_id -->
+                            <td><%= parseDate(students[i].certificate_date[index]) %></td>
+                            <td>
+                                <form action="/download-certificate" method="post" style="display: inline-block">
+                                    <input type="hidden" name="certificatePath" value="<%= students[i].certificate_path[index] %>">
+                                    <input type="hidden" name="certificateId" value="<%= certificate_id %>">
+                                    <button type="submit">Download</button>
+                                </form>
+                                <form action="/view-certificate" method="post" target="_blank" style="display: inline-block">
+                                    <input type="hidden" name="certificatePath" value="<%= students[i].certificate_path[index] %>">
+                                    <input type="hidden" name="certificateId" value="<%= certificate_id %>">
+                                    <button type="submit">View</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %> 
+                <% } %> 
+            <% } %>
+        </tbody>
+        <% } %>
+    </table>
     
 
       <a href="/report-issue">Report an Issue</a>
@@ -146,19 +139,19 @@
 
       //Searching by Certificate_Id
       const searchBar = document.getElementById("search-bar");
-    
+
       // Add event listener to the search input field
       searchBar.addEventListener("input", function() {
           const searchQuery = searchBar.value.toLowerCase(); // Get the search query and convert it to lowercase for case-insensitive search
-    
+
           // Get all table rows except the table header row
           const rows = document.querySelectorAll(".student-table tbody tr");
-    
+
           // Loop through each row and check if it contains the search query in "Certification ID" or "Certificate Type" columns
           rows.forEach(row => {
               const certificationId = row.cells[1].textContent.toLowerCase(); // Get the text content of Certification ID column
               const certificateType = row.cells[2].textContent.toLowerCase(); // Get the text content of Certificate Type column
-    
+
               // If the row contains the search query in "Certification ID" or "Certificate Type" columns, display it, otherwise hide it
               if (certificationId.includes(searchQuery) || certificateType.includes(searchQuery)) {
                   row.style.display = ""; // Display the row
@@ -167,8 +160,8 @@
               }
           });
       });
-    
-    
+
+
       //searching by DATES
       function performSearch() {
         const startDateInput = document.getElementById("start-date").value;
@@ -201,7 +194,7 @@
         const [day, month, year] = dateStr.split('/'); // Assuming date format is 'DD/MM/YYYY'
         return new Date(`${year}-${month}-${day}`); // Create Date object using ISO format (YYYY-MM-DD)
       }
-    
+
       // Function to compare dates for sorting
       function compareDatesDescending(a, b) {
         const dateA = parseDate(a.cells[3].textContent);
@@ -225,16 +218,6 @@
         sortedRows.forEach(row => tbody.appendChild(row)); // Append in reverse order to maintain display order
         updateSerialNumbers(); // Update serial numbers after sorting
       });
-    
-      document.addEventListener('DOMContentLoaded', async function () {
-        const response = await fetch('/total-app-points'); // Assuming you have an API endpoint to fetch total app points
-        console.log(response)
-        const totalAppPoints = await response.text(); // Convert response to text
-        const totalAppPointsElement = document.getElementById('total-app-points');
-        totalAppPointsElement.textContent = totalAppPoints;
-      });
-      
     </script>
-    
   </body>
 </html>

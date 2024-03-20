@@ -174,10 +174,10 @@ app.get('/total-app-points', async (req, res) => {
         // Extract UID from JWT token
         const token = req.cookies['uid']; // Assuming token is sent in the Authorization header
         const decoded = jwt.verify(token, secretKey); // Verify and decode the token
-        const roll_number = decoded.roll_number; // Extract UID from decoded token
+        const uid = decoded.uid; // Extract UID from decoded token
 
         // Find user by UID and calculate total app points
-        const student = await collection_student.findOne({ roll_number }); 
+        const student = await collection_student.findOne({ uid }); // Assuming your Student model has a field 'uid'
         console.log(student);
         let totalAppPoints = 0;
         if (student) {
