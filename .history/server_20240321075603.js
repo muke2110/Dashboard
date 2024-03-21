@@ -165,26 +165,10 @@ app.get('/forgetPassword',(req,res)=>{
     res.render('forgetPage');
 })
 //PAGE FOR VALIDATING THE OTP
-app.get('/verificationPage', (req, res) => {
-    const token = req.cookies['Token'];
-
-    // Check if token exists
-    if (!token) {
-        return res.redirect("/");
-    }
-
-    // Verify the token
-    jwt.verify(token, secretKey, async (err, decoded) => {
-        if (err) {
-            return res.status(401).send('Invalid token');
-        }
-
-        // If token is valid, render the verification page
-        res.render('verificationPage');
-    });
-});
-
-//To Count Total APP-POINTS And it is going to fetch
+app.get('/verificationPage',(req,res)=>{
+    res.render('verificationPage'); // Pass the token to the template
+})
+//To Count TOtoal 
 app.get('/total-app-points', async (req, res) => {
     try {
         // Extract UID from JWT token
@@ -209,6 +193,8 @@ app.get('/total-app-points', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+  
+
 //ADMIN LOOKS INTO ANY ISSUES FACED BY STUDENT
 app.get('/student-Issues', async(req, res) => {
     try {
