@@ -237,6 +237,8 @@ app.get('/student-Issues', async(req, res) => {
                     // console.log(issues);
                     // Render the studentIssues.ejs template and pass the issues variable
                     res.render('studentIssues', { issues });
+                } else {
+                    res.status(500).send('Access Denied')
                 }
             });
         } 

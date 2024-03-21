@@ -173,7 +173,7 @@ app.get('/admin_Dashboard/uploadCertificates', (req, res) => {
 app.get('/forgetPassword',(req,res)=>{
     res.render('forgetPage');
 })
-//PAGE FOR VALIDATING THE OTP Without OTP it is restricted
+//PAGE FOR VALIDATING THE OTP
 app.get('/verificationPage', (req, res) => {
     const token = req.cookies['Token'];
 
@@ -192,6 +192,7 @@ app.get('/verificationPage', (req, res) => {
         res.render('verificationPage');
     });
 });
+
 //To Count Total APP-POINTS And it is going to fetch
 app.get('/total-app-points', async (req, res) => {
     try {
@@ -228,15 +229,14 @@ app.get('/student-Issues', async(req, res) => {
                     // If token is not valid, render the login page
                     res.render('login');
                 }               
-                else if(decoded.role != 'admin'){
-                    res.redirect('/')
-                }
                 else if(decoded.role === 'admin'){
                     // Assuming you fetch issues from MongoDB and store them in the `issues` variable
                     const issues = await issueForm.find().sort({ date: -1 });
                     // console.log(issues);
                     // Render the studentIssues.ejs template and pass the issues variable
                     res.render('studentIssues', { issues });
+                } else {
+                    res.status(500).send('Access Denied')
                 }
             });
         } 

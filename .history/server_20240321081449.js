@@ -228,15 +228,17 @@ app.get('/student-Issues', async(req, res) => {
                     // If token is not valid, render the login page
                     res.render('login');
                 }               
-                else if(decoded.role != 'admin'){
-                    res.redirect('/')
-                }
+                // else if(decoded.role != 'admin'){
+                //     res.redirect('/')
+                // }
                 else if(decoded.role === 'admin'){
                     // Assuming you fetch issues from MongoDB and store them in the `issues` variable
                     const issues = await issueForm.find().sort({ date: -1 });
                     // console.log(issues);
                     // Render the studentIssues.ejs template and pass the issues variable
                     res.render('studentIssues', { issues });
+                } else {
+                    res.status(500).send('Access Denied')
                 }
             });
         } 
