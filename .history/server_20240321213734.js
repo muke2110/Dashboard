@@ -511,7 +511,7 @@ app.post('/UploadRecords', (req, res, next) => {
             console.log("Valid Student");
             await collection_student.updateOne(
                 { roll_number: `${roll_number}` },
-                { $push: { certificate_path: `${path}` , certificate_id: `${id}` , certificate_date: `${date}`, certificate_type: `${type}`, app_points: `${points}`} }
+                { $push: { certificate_path: `${path}` , certificate_id: `${id}` , certificate_date: `${date}`, certificate_type: `${type}`, } }
             );
         } else {
             console.log("No file uploaded");
