@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Position Selector</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload PDF or PNG and Select Positions</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="fileInput" name="fileInput" accept=".pdf,.png" required>
+        <button type="submit">Upload File</button>
+    </form>
+
+    <canvas id="pdfCanvas"></canvas>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#uploadForm').submit(function(event){
+                event.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    url: '/upload', // Your backend route for file upload
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response){
+                        loadPdf(response); // Load PDF after upload
+                    },
+                    error: function(xhr, status, error){
+                        console.error(error);
+                    }
+                });
+            });
+        });
+
+        function loadPdf(pdfUrl) {
+            var pdfCanvas = document.getElementById('pdfCanvas');
+            var ctx = pdfCanvas.getContext('2d');
+
+            var pdfDoc = null;
+            var pageNum = 1;
+            var scale = 1.5;
+
+            // Load PDF document
+            pdfjsLib.getDocument(pdfUrl).promise.then(function(pdfDoc_) {
+                pdfDoc = pdfDoc_;
+                renderPage(pageNum);
+            });
+
+            function renderPage(num) {
+                pdfDoc.getPage(num).then(function(page) {
+                    var viewport = page.getViewport({scale: scale});
+                    pdfCanvas.height = viewport.height;
+                    pdfCanvas.width = viewport.width;
+
+                    var renderContext = {
+                        canvasContext: ctx,
+                        viewport: viewport
+                    };
+                    page.render(renderContext);
+                });
+            }
+
+            // Handle mouse click to get positions
+            pdfCanvas.addEventListener('click', function(event) {
+                var rect = pdfCanvas.getBoundingClientRect();
+                var x = event.clientX - rect.left;
+                var y = event.clientY - rect.top;
+                console.log('Position:', { x: x, y: y });
+
+                // Now you can send the position to the backend for further processing
+                // For demonstration, let's just log it
+                $.ajax({
+                    url: '/save-position', // Your backend route to handle position saving
+                    type: 'POST',
+                    data: {
+                        x: x,
+                        y: y
+                    },
+                    success: function(response){
+                        console.log('Position saved successfully!');
+                    },
+                    error: function(xhr, status, error){
+                        console.error(error);
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>

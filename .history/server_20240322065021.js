@@ -17,7 +17,7 @@ const env = require('dotenv')
 
 const port = 3000;
 const app = express();
-const secretKey = 'Project@College';
+const secretKey = 'Project@College'||;
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 

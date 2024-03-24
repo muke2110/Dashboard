@@ -20,11 +20,13 @@
             </form> 
         </div>
         
-        <form id="uploadForm" class="upload-form" enctype="multipart/form-data">
-            <label for="excelFileInput">Student Details: </label>
-            <input type="file" id="excelFileInput" accept=".xls,.xlsx" required>
-            <label for="templateFileInput">Upload Template:</label>
-            <input type="file" id="templateFileInput" accept=".pdf,.jpg,.jpeg,.png" required>
+        <form id="uploadForm" class="upload-form">
+            <input type="file" id="fileInput" accept=".xls,.xlsx" required>
+            <label for="template">Select Template:</label>
+            <select id="template">
+                <option value="pdf">PDF</option>
+                <option value="image">Image</option>
+            </select>
             <label for="id">Certificate Unique ID:</label>
             <input type="text" id="id" required>
             <label for="student">Student Name:</label>
@@ -33,34 +35,39 @@
             <input type="text" id="event" required>
             <label for="date">Date:</label>
             <input type="date" id="date" required>
-            <button type="button" onclick="processFiles()"><i class="material-icons">cloud_upload</i> Upload</button>
+            <button type="button" onclick="processTemplate()"><i class="material-icons">cloud_upload</i> Upload</button>
         </form>
 
         <div id="templatePreview" style="display: none;"></div>
     </div>
 
     <script>
-        function processFiles() {
+        function processTemplate() {
             // Retrieve form data
-            var excelFile = document.getElementById('excelFileInput').files[0];
-            var templateFile = document.getElementById('templateFileInput').files[0];
+            var file = document.getElementById('fileInput').files[0];
+            var templateType = document.getElementById('template').value;
             var id = document.getElementById('id').value;
             var student = document.getElementById('student').value;
             var event = document.getElementById('event').value;
             var date = document.getElementById('date').value;
 
-            // You can now handle the uploaded files accordingly
-            // For simplicity, let's assume you just want to log their details for now
-            console.log('Excel File:', excelFile);
-            console.log('Template File:', templateFile);
-            console.log('Certificate Unique ID:', id);
-            console.log('Student Name:', student);
-            console.log('Event Name:', event);
-            console.log('Date:', date);
+            // Read the file and display the template
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var templatePreview = document.getElementById('templatePreview');
+                templatePreview.innerHTML = '<img src="' + e.target.result + '" alt="Template Preview">';
+                templatePreview.style.display = 'block';
 
-            // Now you can proceed to process the uploaded files and extract information
-            // You can use libraries like OpenCV.js or implement your own logic to extract text from coordinates
-            // Then you can proceed with uploading the extracted information
+                // Now you can add functionality to allow the user to select coordinates on the template
+                // For simplicity, let's assume the user manually inputs the coordinates for now
+                var xCoordinate = prompt('Enter X Coordinate:');
+                var yCoordinate = prompt('Enter Y Coordinate:');
+                
+                // Now you can use the uploaded file, template type, and coordinates to extract information
+                // You can use libraries like OpenCV.js or implement your own logic to extract text from coordinates
+                // Then you can proceed with uploading the extracted information
+            };
+            reader.readAsDataURL(file);
         }
     </script>
 </body>

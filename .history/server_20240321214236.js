@@ -13,7 +13,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const xlsx = require('xlsx');
 const PDFDocument = require('pdfkit');
-const env = require('dotenv')
 
 const port = 3000;
 const app = express();
@@ -477,7 +476,7 @@ app.post('/UploadRecords', (req, res, next) => {
     upload.single("file")(req, res, async function (err) {
         let errors = [];
         const roll_number = req.body.roll_number;
-        // console.log(req.body)
+        console.log(req.body)
         // Handle MulterError
         if (err instanceof multer.MulterError) {
             if (err.code === 'LIMIT_FILE_SIZE') {

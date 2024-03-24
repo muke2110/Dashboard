@@ -13,7 +13,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const xlsx = require('xlsx');
 const PDFDocument = require('pdfkit');
-const env = require('dotenv')
 
 const port = 3000;
 const app = express();
@@ -561,7 +560,7 @@ app.post('/users/login', async (req, res) => {
             const token = jwt.sign(usersToken, secretKey);
         
             // Store the token in a secure way (e.g., in a cookie or client-side storage)
-            res.cookie('uid', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }); // Set the expiration time as needed
+            res.cookie('uid', token, { httpOnly: true, maxAge: 1 * 60 * 1000 }); // Set the expiration time as needed
             res.redirect('/student_Dashboard');
 
         } else {

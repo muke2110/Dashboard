@@ -13,7 +13,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const xlsx = require('xlsx');
 const PDFDocument = require('pdfkit');
-const env = require('dotenv')
 
 const port = 3000;
 const app = express();
@@ -203,7 +202,7 @@ app.get('/total-app-points', async (req, res) => {
 
         // Find user by UID and calculate total app points
         const student = await collection_student.findOne({ roll_number }); 
-        // console.log(student);
+        console.log(student);
         let totalAppPoints = 0;
         if (student) {
             student.app_points.forEach(points => {
@@ -267,6 +266,7 @@ app.get('/student_Dashboard', async (req, res) => {
                         // console.log(students)
                         // Check if 'success' query parameter is true and include a successMessage
                         const success = req.query.success === 'true';
+                        console.log(students[0].app_points.length)
                         res.render('student_Dashboard', { students, roll_number: decoded.roll_number, successMessage: success ? 'Issue reported successfully!' : null });
                     }
                 }
@@ -477,7 +477,7 @@ app.post('/UploadRecords', (req, res, next) => {
     upload.single("file")(req, res, async function (err) {
         let errors = [];
         const roll_number = req.body.roll_number;
-        // console.log(req.body)
+        console.log(req.body)
         // Handle MulterError
         if (err instanceof multer.MulterError) {
             if (err.code === 'LIMIT_FILE_SIZE') {
@@ -674,13 +674,13 @@ app.post('/register', async (req, res) => {
 
 //FORGET PASSWORD STEP-1 ( OTP GENERATION )
 app.post('/forgetPassword', async (req, res) => {
-
+    console.log(req.body);
     const { identifier: email, role } = req.body;
 
     try {
         // Retrieve user information from the database
         const user = await emailRetrieve(role, email, res);
-        // console.log('Retrieved user:', user);
+        console.log('Retrieved user:', user);
 
         // Check if user exists
         if (!user) {
@@ -779,7 +779,7 @@ app.post('/verifyAndResetPassword', async (req, res) => {
             // Hash the new password
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
-            // console.log('Hashed password:', hashedPassword);
+            console.log('Hashed password:', hashedPassword);
     
             // Update the password in the database based on role
             let updateQuery;
@@ -789,7 +789,7 @@ app.post('/verifyAndResetPassword', async (req, res) => {
                 updateQuery = { email: decodedEmail };
             }
             const updateResult = await (role === 'student' ? collection_student : collection_admin).updateOne(updateQuery, { $set: { password: hashedPassword } });
-            // console.log('Update result:', updateResult);
+            console.log('Update result:', updateResult);
 
             // Filter out the used OTP from the array and update the user document
             const updatedOTPArray = user.resetOTP.filter((otpValue) => otpValue !== otp);

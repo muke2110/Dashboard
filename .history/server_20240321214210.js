@@ -13,7 +13,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const xlsx = require('xlsx');
 const PDFDocument = require('pdfkit');
-const env = require('dotenv')
 
 const port = 3000;
 const app = express();
@@ -203,7 +202,7 @@ app.get('/total-app-points', async (req, res) => {
 
         // Find user by UID and calculate total app points
         const student = await collection_student.findOne({ roll_number }); 
-        // console.log(student);
+        console.log(student);
         let totalAppPoints = 0;
         if (student) {
             student.app_points.forEach(points => {
@@ -267,6 +266,7 @@ app.get('/student_Dashboard', async (req, res) => {
                         // console.log(students)
                         // Check if 'success' query parameter is true and include a successMessage
                         const success = req.query.success === 'true';
+                        console.log(students[0].app_points.length)
                         res.render('student_Dashboard', { students, roll_number: decoded.roll_number, successMessage: success ? 'Issue reported successfully!' : null });
                     }
                 }
@@ -477,7 +477,7 @@ app.post('/UploadRecords', (req, res, next) => {
     upload.single("file")(req, res, async function (err) {
         let errors = [];
         const roll_number = req.body.roll_number;
-        // console.log(req.body)
+        console.log(req.body)
         // Handle MulterError
         if (err instanceof multer.MulterError) {
             if (err.code === 'LIMIT_FILE_SIZE') {

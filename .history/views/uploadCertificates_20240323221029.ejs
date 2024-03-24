@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Position Selector</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload PDF or PNG and Select Positions</h1>
+    <input type="file" id="fileInput" accept=".pdf,.png" required>
+    <button id="uploadButton">Upload File</button>
+
+    <button id="selectPosition" style="display: none;">Select Positions</button>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            var fileUploaded = false;
+            var uploadedFile;
+
+            $('#uploadButton').click(function(){
+                $('#fileInput').click();
+            });
+
+            $('#fileInput').change(function(event){
+                var file = event.target.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        uploadedFile = e.target.result;
+                        fileUploaded = true;
+                        $('#selectPosition').show(); // Show button after upload
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            $('#selectPosition').click(function(){
+                if (fileUploaded) {
+                    openPositionSelectionWindow(uploadedFile);
+                } else {
+                    alert('Please upload a file first.');
+                }
+            });
+
+            function openPositionSelectionWindow(file) {
+                var win = window.open("", "_blank");
+                win.document.write(`
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Select Positions</title>
+                        <style>
+                            canvas {
+                                border: 1px solid black;
+                                cursor: crosshair;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Select Positions</h1>
+                        <p>Click on the image to select positions.</p>
+
+                        <canvas id="imageCanvas"></canvas>
+
+                        <script>
+                            var img = new Image();
+                            img.onload = function() {
+                                var canvas = document.getElementById('imageCanvas');
+                                var ctx = canvas.getContext('2d');
+                                canvas.width = img.width;
+                                canvas.height = img.height;
+                                ctx.drawImage(img, 0, 0);
+                            };
+                            img.src = "${file}";
+
+                            var positions = [];
+
+                            document.getElementById('imageCanvas').addEventListener('click', function(event){
+                                var rect = this.getBoundingClientRect();
+                                var x = event.clientX - rect.left;
+                                var y = event.clientY - rect.top;
+                                positions.push({ x: x, y: y });
+                                console.log('Positions:', positions);
+                            });
+                        </script>
+                    </body>
+                    </html>
+                `);
+            }
+        });
+    </script>
+</body>
+</html>

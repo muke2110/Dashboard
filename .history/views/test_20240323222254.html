@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Position Selector</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload PDF or PNG and Select Positions</h1>
+    <input type="file" id="fileInput" accept=".pdf,.png" required>
+    <button id="uploadButton">Upload File</button>
+
+    <button id="selectPosition" style="display: none;">Select Positions</button>
+
+    <script>
+        document.getElementById('uploadButton').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var img = new Image();
+                    img.onload = function() {
+                        var canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        canvas.style.border = '1px solid black';
+                        canvas.style.cursor = 'crosshair';
+                        var ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        document.body.appendChild(canvas);
+
+                        canvas.addEventListener('click', function(event) {
+                            var rect = canvas.getBoundingClientRect();
+                            var x = event.clientX - rect.left;
+                            var y = event.clientY - rect.top;
+                            console.log('Position:', { x: x, y: y });
+                        });
+
+                        document.getElementById('selectPosition').style.display = 'block';
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('selectPosition').addEventListener('click', function() {
+            alert('Please click on the image to select positions.');
+        });
+    </script>
+</body>
+</html>

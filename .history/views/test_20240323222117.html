@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Position Selector</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload PDF or PNG and Select Positions</h1>
+    <input type="file" id="fileInput" accept=".pdf,.png" required>
+    <button id="uploadButton">Upload File</button>
+
+    <button id="selectPosition" style="display: none;">Select Positions</button>
+
+    <script>
+        var fileData;
+
+        document.getElementById('uploadButton').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    fileData = e.target.result;
+                    document.getElementById('selectPosition').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('selectPosition').addEventListener('click', function() {
+            if (fileData) {
+                openPositionSelectionWindow(fileData);
+            } else {
+                alert('Please upload a file first.');
+            }
+        });
+
+        function openPositionSelectionWindow(data) {
+            var win = window.open("", "_blank");
+            win.document.write('<!DOCTYPE html>');
+            win.document.write('<html lang="en">');
+            win.document.write('<head>');
+            win.document.write('<meta charset="UTF-8">');
+            win.document.write('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
+            win.document.write('<title>Select Positions</title>');
+            win.document.write('<style>');
+            win.document.write('canvas { border: 1px solid black; cursor: crosshair; }');
+            win.document.write('</style>');
+            win.document.write('</head>');
+            win.document.write('<body>');
+            win.document.write('<h1>Select Positions</h1>');
+            win.document.write('<p>Click on the image to select positions.</p>');
+            win.document.write('<canvas id="imageCanvas"></canvas>');
+            win.document.write('<script>');
+            win.document.write('var img = new Image();');
+            win.document.write('img.onload = function() {');
+            win.document.write('var canvas = document.getElementById("imageCanvas");');
+            win.document.write('var ctx = canvas.getContext("2d");');
+            win.document.write('canvas.width = img.width;');
+            win.document.write('canvas.height = img.height;');
+            win.document.write('ctx.drawImage(img, 0, 0);');
+            win.document.write('canvas.addEventListener("click", function(event){');
+            win.document.write('var rect = canvas.getBoundingClientRect();');
+            win.document.write('var x = event.clientX - rect.left;');
+            win.document.write('var y = event.clientY - rect.top;');
+            win.document.write('console.log("Position:", { x: x, y: y });');
+            win.document.write('});');
+            win.document.write('};');
+            win.document.write('img.src = "' + data + '";');
+            win.document.write('</script>');
+            win.document.write('</body>');
+            win.document.write('</html>');
+            win.document.close();
+        }
+    </script>
+</body>
+</html>
