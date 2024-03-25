@@ -159,25 +159,26 @@
       });
 
       // Function to search by certificate type
-      function searchByCertificateType() {
-        const selectedTypes = certificateTypeSelect.value.toLowerCase().split('/'); // Split selected types by '/'
-        
-        const rows = document.querySelectorAll(".student-table tbody tr");
+     // Function to search by certificate type
+function searchByCertificateType() {
+  const selectedTypes = certificateTypeSelect.value.toLowerCase().split('/'); // Split selected types by '/'
+  
+  const rows = document.querySelectorAll(".student-table tbody tr");
 
-        rows.forEach(row => {
-            const rowCertificateType = row.cells[2].textContent.toLowerCase(); // Get certificate type from table and convert to lowercase
+  rows.forEach(row => {
+      const rowCertificateType = row.cells[2].textContent.toLowerCase(); // Get certificate type from table and convert to lowercase
 
-            // Check if any part of the selected types matches the row's certificate type
-            const match = selectedTypes.some(type => rowCertificateType.includes(type.trim()));
+      // Check if any part of the selected types matches the row's certificate type
+      const match = selectedTypes.some(type => rowCertificateType.includes(type.trim()));
 
-            // Show row if there's a match or if "All" is selected
-            if (selectedTypes.includes("all") || match) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none"; // Hide row if certificate type does not match
-            }
-        });
+      // Show row if there's a match or if "All" is selected
+      if (selectedTypes.includes("all") || match) {
+          row.style.display = "";
+      } else {
+          row.style.display = "none"; // Hide row if certificate type does not match
       }
+  });
+}
 
 
 

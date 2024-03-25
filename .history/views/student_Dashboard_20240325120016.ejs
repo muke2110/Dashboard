@@ -45,18 +45,19 @@
           <label for="certificate-type">Certificate Types:</label>
           <select id="certificate-type">
             <option value="All">All Types</option>
-            <option value="CEA/NSS/National Initiatives">CEA/NSS/National Initiatives</option>
-            <option value="Sports And Game">Sports And Game</option>
-            <option value="Cultural Activities">Cultural Activities</option>
-            <option value="Women's form activities">Women's form activities</option>
-            <option value="Hobby clubs Activities">Hobby clubs Activities</option>
-            <option value="Professional society Activities">Professional society Activities</option>
-            <option value="DEpt. Students Association Activities">DEpt. Students Association Activities</option>
-            <option value="Technical Club Activities">Technical Club Activities</option>
-            <option value="Innovation and Incubation Cell Activities">Innovation and Incubation Cell Activities</option>
-            <option value="Professional Self Initiatives">Professional Self Initiatives</option>
-            <option value="Others">Others</option>
-        </select>        
+            <option value="cert1">CEA/NSS/National Initiatives</option>
+            <option value="cert2">Sports And Game</option>
+            <option value="cert1">Cultural Activities</option>
+            <option value="cert2">Women's form activities</option>
+            <option value="cert1">Hobby clubs Activities</option>
+            <option value="cert2">Professional society Activities</option>
+            <option value="cert1">DEpt. Students Association Activities</option>
+            <option value="cert2">Technical Club Activities</option>
+            <option value="cert2">Innovation and Incubation Cell Activities</option>
+            <option value="cert1">Professional Self Initiatives</option>
+            <option value="cert2">Others</option>
+            <!-- Add other certificate options -->
+          </select>
         </div>
 
         <div class="date-filter-container">
@@ -157,30 +158,24 @@
       document.getElementById("end-date").addEventListener("change", function() {
           performSearch(); // Call the performSearch function
       });
-
+    
       // Function to search by certificate type
       function searchByCertificateType() {
-        const selectedTypes = certificateTypeSelect.value.toLowerCase().split('/'); // Split selected types by '/'
-        
-        const rows = document.querySelectorAll(".student-table tbody tr");
-
-        rows.forEach(row => {
-            const rowCertificateType = row.cells[2].textContent.toLowerCase(); // Get certificate type from table and convert to lowercase
-
-            // Check if any part of the selected types matches the row's certificate type
-            const match = selectedTypes.some(type => rowCertificateType.includes(type.trim()));
-
-            // Show row if there's a match or if "All" is selected
-            if (selectedTypes.includes("all") || match) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none"; // Hide row if certificate type does not match
-            }
-        });
+          const certificateType = certificateTypeSelect.value; // Get selected certificate type
+    
+          const rows = document.querySelectorAll(".student-table tbody tr");
+    
+          rows.forEach(row => {
+              const rowCertificateType = row.cells[2].textContent.toLowerCase(); // Get certificate type from table
+    
+              // Check if certificate type matches the selected type or if the selected type is "All"
+              if (certificateType === "All" || rowCertificateType === certificateType) {
+                  row.style.display = ""; // Show row if certificate type matches or if "All" is selected
+              } else {
+                  row.style.display = "none"; // Hide row if certificate type does not match
+              }
+          });
       }
-
-
-
     
       // Function to search by date range
       function performSearch() {
