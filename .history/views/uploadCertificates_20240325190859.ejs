@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Excel Sheet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/uploadpage.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Upload PDF or Image and Select Positions</h1>
+        <form id="positionSelectionForm">
+            <input type="file" id="pdfFileInput" accept=".pdf,.png,.jpeg" required>
+            <button type="button" id="uploadPdfButton">Upload PDF File</button>
+        
+            <input type="file" id="csvFileInput" accept=".csv" required>
+            <button type="button" id="uploadCsvButton">Upload CSV File</button>
+
+            <button type="button" id="selectPositionName" style="display: none;">Select Name Position</button>
+            <button type="button" id="selectPositionEvent" style="display: none;">Select Event Position</button>
+            <button type="button" id="selectPositionDate" style="display: none;">Select Date Position</button>
+            <button type="button" id="finishSelection" style="display: none;">Finish Selection</button>
+            <button type="button" id="cancelSelection" style="display: none;">Cancel Selection</button>
+
+            <button type="button" id="previewCoordinatesButton" style="display: none;">Preview Coordinates</button>
+        </form>
+
+        <div id="pdfViewerContainer" style="display: none;">
+            <canvas id="pdfCanvas"></canvas>
+            <div id="selectedCoordinatesPreview">
+                <h2>Selected Coordinates:</h2>
+                <ul id="coordinatesList"></ul>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script>
+        var positions = {};
+        var currentPositionLabel = null;
+        var pdfFile = null;
+        var pdfCanvas = null;
+
+        document.getElementById('uploadPdfButton').addEventListener('click', function() {
+            document.getElementById('pdfFileInput').click();
+        });
+
+        document.getElementById('pdfFileInput').addEventListener('change', function(event) {
+            pdfFile = event.target.files[0];
+            if (pdfFile) {
+                document.getElementById('selectPositionName').style.display = 'block';
+                document.getElementById('selectPositionEvent').style.display = 'block';
+                document.getElementById('selectPositionDate').style.display = 'block';
+            }
+        });
+
+        async function loadPdfViewer() {
+            return new Promise(function(resolve, reject) {
+                var script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+                script.onload = resolve;
+                script.onerror = reject;
+                document.body.appendChild(script);
+            });
+        }
+
+        async function renderPdfWithCoordinates() {
+            if (pdfCanvas) {
+                document.getElementById('pdfViewerContainer').removeChild(pdfCanvas);
+            }
+
+            await loadPdfViewer();
+
+            var fileReader = new FileReader();
+            fileReader.onload = function() {
+                var typedarray = new Uint8Array(this.result);
+                pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
+                    pdf.getPage(1).then(function(page) {
+                        var viewport = page.getViewport({ scale: 1.0 });
+                        var scale = 1.5; // Adjust scale as needed
+                        viewport = page.getViewport({ scale: scale });
+                        var canvas = document.createElement('canvas');
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+                        canvas.style.border = '1px solid black';
+                        var ctx = canvas.getContext('2d');
+                        var renderContext = {
+                            canvasContext: ctx,
+                            viewport: viewport
+                        };
+                        page.render(renderContext);
+                        document.getElementById('pdfViewerContainer').appendChild(canvas);
+
+                        // Render selected coordinates
+                        var coordinatesList = document.getElementById('coordinatesList');
+                        coordinatesList.innerHTML = '';
+                        Object.keys(positions).forEach(function(key) {
+                            var listItem = document.createElement('li');
+                            listItem.textContent = key + ': (' + positions[key].x + ', ' + positions[key].y + ')';
+                            coordinatesList.appendChild(listItem);
+                            ctx.beginPath();
+                            ctx.arc(positions[key].x, positions[key].y, 5, 0, 2 * Math.PI);
+                            ctx.fillStyle = 'red';
+                            ctx.fill();
+                            ctx.closePath();
+                        });
+
+                        // Show the PDF viewer container
+                        document.getElementById('pdfViewerContainer').style.display = 'block';
+                    });
+                });
+            };
+            fileReader.readAsArrayBuffer(pdfFile);
+        }
+
+        document.getElementById('selectPositionName').addEventListener('click', function() {
+            currentPositionLabel = 'Name';
+            renderPdfWithCoordinates();
+        });
+
+        document.getElementById('selectPositionEvent').addEventListener('click', function() {
+            currentPositionLabel = 'Event Name';
+            renderPdfWithCoordinates();
+        });
+
+        document.getElementById('selectPositionDate').addEventListener('click', function() {
+            currentPositionLabel = 'Date';
+            renderPdfWithCoordinates();
+        });
+
+        document.getElementById('previewCoordinatesButton').addEventListener('click', function() {
+            document.getElementById('selectedCoordinatesPreview').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Excel Sheet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/uploadpage.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Upload PDF or Image and Select Positions</h1>
+        <form id="positionSelectionForm" action="/test" method="post">
+            <input type="file" id="pdfFileInput" accept=".pdf,.png,.jpeg" required>
+            <button type="button" id="uploadPdfButton">Upload PDF File</button>
+        
+            <input type="file" id="csvFileInput" accept=".csv, .xlsx" required>
+            <button type="button" id="uploadCsvButton">Upload CSV File</button>
+
+            <button type="button" id="selectPositionName" style="display: none;">Select Name Position</button>
+            <button type="button" id="selectPositionEvent" style="display: none;">Select Event Position</button>
+            <button type="button" id="selectPositionDate" style="display: none;">Select Date Position</button>
+            <button type="button" id="finishSelection" style="display: none;">Finish Selection</button>
+            <button type="button" id="cancelSelection" style="display: none;">Cancel Selection</button>
+
+            <button type="button" id="previewCoordinatesButton" style="display: none;">Preview Coordinates</button>
+            <button type="submit" id="submitButton">Submit</button>
+        </form>
+
+        <div id="selectedCoordinatesPreview" style="display: none;">
+            <h2>Selected Coordinates:</h2>
+            <ul id="coordinatesList"></ul>
+            <div id="pdfPreviewContainer" style="display: none;"></div>
+            <button type="button" id="closePreviewButton" style="display: none;">Close Preview</button>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script>
+        var positions = {};
+        var currentPositionLabel = null;
+        var pdfFile = null;
+        var canvas = null;
+
+        document.getElementById('uploadPdfButton').addEventListener('click', function() {
+            document.getElementById('pdfFileInput').click();
+        });
+
+        document.getElementById('pdfFileInput').addEventListener('change', function(event) {
+            pdfFile = event.target.files[0];
+            if (pdfFile) {
+                document.getElementById('selectPositionName').style.display = 'block';
+                document.getElementById('selectPositionEvent').style.display = 'block';
+                document.getElementById('selectPositionDate').style.display = 'block';
+            }
+        });
+
+        function loadPdfWorker() {
+            return new Promise(function(resolve, reject) {
+                var script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+                script.onload = resolve;
+                script.onerror = reject;
+                document.body.appendChild(script);
+            });
+        }
+
+        async function renderPdf() {
+            if (canvas) {
+                document.body.removeChild(canvas);
+                document.getElementById('cancelSelection').style.display = 'none'; // Hide cancel button when rendering PDF
+            }
+
+            await loadPdfWorker();
+
+            var fileReader = new FileReader();
+            fileReader.onload = function() {
+                var typedarray = new Uint8Array(this.result);
+                pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
+                    pdf.getPage(1).then(function(page) {
+                        var viewport = page.getViewport({ scale: 1.0 });
+                        var scale = Math.min(
+                            window.innerWidth / viewport.width,
+                            window.innerHeight / viewport.height
+                        );
+                        viewport = page.getViewport({ scale: scale });
+                        canvas = document.createElement('canvas');
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+                        canvas.style.border = '1px solid black';
+                        canvas.style.cursor = 'crosshair';
+                        var ctx = canvas.getContext('2d');
+                        var renderContext = {
+                            canvasContext: ctx,
+                            viewport: viewport
+                        };
+                        page.render(renderContext);
+                        document.body.appendChild(canvas);
+
+                        canvas.addEventListener('click', function(event) {
+                            var rect = canvas.getBoundingClientRect();
+                            var x = event.clientX - rect.left;
+                            var y = event.clientY - rect.top;
+                            positions[currentPositionLabel] = { x: x, y: y };
+                            console.log(currentPositionLabel + ' Position:', { x: x, y: y });
+                            document.body.removeChild(canvas);
+                            canvas = null;
+                            document.getElementById('cancelSelection').style.display = 'none'; // Hide cancel button after selecting position
+                            document.getElementById('previewCoordinatesButton').style.display = 'block'; // Show preview coordinates button
+                        });
+                    });
+                });
+            };
+            fileReader.readAsArrayBuffer(pdfFile);
+        }
+
+        document.getElementById('selectPositionName').addEventListener('click', function() {
+            currentPositionLabel = 'Name';
+            renderPdf();
+            document.getElementById('cancelSelection').style.display = 'block';
+        });
+
+        document.getElementById('selectPositionEvent').addEventListener('click', function() {
+            currentPositionLabel = 'Event Name';
+            renderPdf();
+            document.getElementById('cancelSelection').style.display = 'block';
+        });
+
+        document.getElementById('selectPositionDate').addEventListener('click', function() {
+            currentPositionLabel = 'Date';
+            renderPdf();
+            document.getElementById('cancelSelection').style.display = 'block';
+        });
+
+        document.getElementById('previewCoordinatesButton').addEventListener('click', function() {
+            document.getElementById('selectedCoordinatesPreview').style.display = 'block';
+            var coordinatesList = document.getElementById('coordinatesList');
+            coordinatesList.innerHTML = ''; // Clear previous coordinates
+            Object.keys(positions).forEach(function(key) {
+                var listItem = document.createElement('li');
+                listItem.textContent = key + ': (' + positions[key].x + ', ' + positions[key].y + ')';
+                coordinatesList.appendChild(listItem);
+            });
+            // Preview PDF with coordinates
+            var pdfPreviewContainer = document.getElementById('pdfPreviewContainer');
+            pdfPreviewContainer.innerHTML = ''; // Clear previous preview
+            var pdfViewer = document.createElement('iframe');
+            pdfViewer.src = 'https://mozilla.github.io/pdf.js/web/viewer.html?file=' + encodeURIComponent(URL.createObjectURL(pdfFile));
+            pdfViewer.style.width = '100%';
+            pdfViewer.style.height = '500px';
+            pdfPreviewContainer.appendChild(pdfViewer);
+            pdfPreviewContainer.style.display = 'block'; // Show PDF preview
+            // Show close preview button
+            document.getElementById('closePreviewButton').style.display = 'block';
+        });
+
+        document.getElementById('closePreviewButton').addEventListener('click', function() {
+            document.getElementById('selectedCoordinatesPreview').style.display = 'none';
+            document.getElementById('pdfPreviewContainer').style.display = 'none'; // Hide PDF preview
+            document.getElementById('closePreviewButton').style.display = 'none'; // Hide close button
+        });
+
+        document.getElementById('cancelSelection').addEventListener('click', function() {
+            if (canvas) {
+                document.body.removeChild(canvas);
+                canvas = null;
+            }
+            document.getElementById('cancelSelection').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
