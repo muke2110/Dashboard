@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Coordinates</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+</head>
+<body>
+  <canvas id="pdfCanvas"></canvas>
+  <script>
+    // URL of the PDF file
+    const pdfUrl = 'example.pdf';
+    // Coordinates of the clicked point
+    let clickedX, clickedY;
+
+    // Function to render PDF onto canvas
+    async function renderPdf(url) {
+      const pdf = await pdfjsLib.getDocument(url).promise;
+      const page = await pdf.getPage(1); // Get the first page
+      const scale = 1.5;
+      const viewport = page.getViewport({ scale });
+
+      const canvas = document.getElementById('pdfCanvas');
+      const context = canvas.getContext('2d');
+
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+
+      await page.render(renderContext).promise;
+    }
+
+    // Function to handle click events on the canvas
+    function handleClick(event) {
+      const canvas = event.target;
+      const rect = canvas.getBoundingClientRect();
+      clickedX = event.clientX - rect.left;
+      clickedY = event.clientY - rect.top;
+
+      // Convert clicked coordinates from canvas space to PDF space
+      const pdfX = clickedX * (canvas.width / canvas.clientWidth);
+      const pdfY = clickedY * (canvas.height / canvas.clientHeight);
+
+      console.log('Clicked coordinates (canvas):', clickedX, clickedY);
+      console.log('Clicked coordinates (PDF):', pdfX, pdfY);
+
+      // Now you can do further processing with these coordinates
+      // For example, you can extract text or images from the PDF based on these coordinates
+    }
+
+    // Event listener for click events on the canvas
+    const canvas = document.getElementById('pdfCanvas');
+    canvas.addEventListener('click', handleClick);
+
+    // Render the PDF when the page loads
+    renderPdf(pdfUrl);
+  </script>
+</body>
+</html>
