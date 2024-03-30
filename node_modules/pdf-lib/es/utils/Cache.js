@@ -3,6 +3,9 @@ var Cache = /** @class */ (function () {
         this.populate = populate;
         this.value = undefined;
     }
+    Cache.prototype.getValue = function () {
+        return this.value;
+    };
     Cache.prototype.access = function () {
         if (!this.value)
             this.value = this.populate();

@@ -18,14 +18,14 @@ var Stream = /** @class */ (function () {
         get: function () {
             return this.end - this.start;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Stream.prototype, "isEmpty", {
         get: function () {
             return this.length === 0;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Stream.prototype.getByte = function () {

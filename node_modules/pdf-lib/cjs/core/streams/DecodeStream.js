@@ -39,7 +39,7 @@ var DecodeStream = /** @class */ (function () {
             }
             return this.bufferLength === 0;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DecodeStream.prototype.getByte = function () {

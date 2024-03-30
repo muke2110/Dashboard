@@ -6,8 +6,10 @@ import { charFromCode } from "../../utils";
 var Newline = CharCodes.Newline, CarriageReturn = CharCodes.CarriageReturn;
 // TODO: Throw error if eof is reached before finishing object parse...
 var BaseParser = /** @class */ (function () {
-    function BaseParser(bytes) {
+    function BaseParser(bytes, capNumbers) {
+        if (capNumbers === void 0) { capNumbers = false; }
         this.bytes = bytes;
+        this.capNumbers = capNumbers;
     }
     BaseParser.prototype.parseRawInt = function () {
         var value = '';
@@ -46,6 +48,17 @@ var BaseParser = /** @class */ (function () {
         var numberValue = Number(value);
         if (!value || !isFinite(numberValue)) {
             throw new NumberParsingError(this.bytes.position(), value);
+        }
+        if (numberValue > Number.MAX_SAFE_INTEGER) {
+            if (this.capNumbers) {
+                var msg = "Parsed number that is too large for some PDF readers: " + value + ", using Number.MAX_SAFE_INTEGER instead.";
+                console.warn(msg);
+                return Number.MAX_SAFE_INTEGER;
+            }
+            else {
+                var msg = "Parsed number that is too large for some PDF readers: " + value + ", not capping.";
+                console.warn(msg);
+            }
         }
         return numberValue;
     };

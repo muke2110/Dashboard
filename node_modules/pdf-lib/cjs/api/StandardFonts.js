@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.StandardFonts = void 0;
 var StandardFonts;
 (function (StandardFonts) {
     StandardFonts["Courier"] = "Courier";

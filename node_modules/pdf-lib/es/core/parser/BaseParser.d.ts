@@ -1,7 +1,8 @@
 import ByteStream from "./ByteStream";
 declare class BaseParser {
     protected readonly bytes: ByteStream;
-    constructor(bytes: ByteStream);
+    protected readonly capNumbers: boolean;
+    constructor(bytes: ByteStream, capNumbers?: boolean);
     protected parseRawInt(): number;
     protected parseRawNumber(): number;
     protected skipWhitespace(): void;

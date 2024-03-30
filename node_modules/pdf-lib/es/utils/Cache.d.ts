@@ -3,6 +3,7 @@ declare class Cache<T> {
     private readonly populate;
     private value;
     private constructor();
+    getValue(): T | undefined;
     access(): T;
     invalidate(): void;
 }

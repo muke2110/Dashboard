@@ -57,12 +57,21 @@ var PDFFont = /** @class */ (function () {
      * ```js
      * const height = font.heightAtSize(24)
      * ```
+     *
+     * The `options.descender` value controls whether or not the font's
+     * descender is included in the height calculation.
+     *
      * @param size The font size to be used for this measurement.
+     * @param options The options to be used when computing this measurement.
      * @returns The height of this font at the given size.
      */
-    PDFFont.prototype.heightAtSize = function (size) {
+    PDFFont.prototype.heightAtSize = function (size, options) {
+        var _a;
         utils_1.assertIs(size, 'size', ['number']);
-        return this.embedder.heightOfFontAtSize(size);
+        utils_1.assertOrUndefined(options === null || options === void 0 ? void 0 : options.descender, 'options.descender', ['boolean']);
+        return this.embedder.heightOfFontAtSize(size, {
+            descender: (_a = options === null || options === void 0 ? void 0 : options.descender) !== null && _a !== void 0 ? _a : true,
+        });
     };
     /**
      * Compute the font size at which this font is a given height. For example:
@@ -82,10 +91,7 @@ var PDFFont = /** @class */ (function () {
      */
     PDFFont.prototype.getCharacterSet = function () {
         if (this.embedder instanceof core_1.StandardFontEmbedder) {
-            // TODO: Update @pdf-lib/standard fonts to export encoding.characterSet
-            return Object.keys(this.embedder.encoding.unicodeMappings)
-                .map(Number)
-                .sort(function (a, b) { return a - b; });
+            return this.embedder.encoding.supportedCodePoints;
         }
         else {
             return this.embedder.font.characterSet;

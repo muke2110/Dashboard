@@ -10,13 +10,14 @@ var utils_1 = require("../../utils");
  *   https://github.com/foliojs/pdfkit/blob/f91bdd61c164a72ea06be1a43dc0a412afc3925f/lib/font/afm.coffee
  */
 var StandardFontEmbedder = /** @class */ (function () {
-    function StandardFontEmbedder(fontName) {
+    function StandardFontEmbedder(fontName, customName) {
         // prettier-ignore
         this.encoding = (fontName === standard_fonts_1.FontNames.ZapfDingbats ? standard_fonts_1.Encodings.ZapfDingbats
             : fontName === standard_fonts_1.FontNames.Symbol ? standard_fonts_1.Encodings.Symbol
                 : standard_fonts_1.Encodings.WinAnsi);
         this.font = standard_fonts_1.Font.load(fontName);
         this.fontName = this.font.FontName;
+        this.customName = customName;
     }
     /**
      * Encode the JavaScript string into this font. (JavaScript encodes strings in
@@ -43,11 +44,16 @@ var StandardFontEmbedder = /** @class */ (function () {
         var scale = size / 1000;
         return totalWidth * scale;
     };
-    StandardFontEmbedder.prototype.heightOfFontAtSize = function (size) {
-        var _a = this.font, Ascender = _a.Ascender, Descender = _a.Descender, FontBBox = _a.FontBBox;
+    StandardFontEmbedder.prototype.heightOfFontAtSize = function (size, options) {
+        if (options === void 0) { options = {}; }
+        var _a = options.descender, descender = _a === void 0 ? true : _a;
+        var _b = this.font, Ascender = _b.Ascender, Descender = _b.Descender, FontBBox = _b.FontBBox;
         var yTop = Ascender || FontBBox[3];
         var yBottom = Descender || FontBBox[1];
-        return ((yTop - yBottom) / 1000) * size;
+        var height = yTop - yBottom;
+        if (!descender)
+            height += Descender || 0;
+        return (height / 1000) * size;
     };
     StandardFontEmbedder.prototype.sizeOfFontAtHeight = function (height) {
         var _a = this.font, Ascender = _a.Ascender, Descender = _a.Descender, FontBBox = _a.FontBBox;
@@ -59,7 +65,7 @@ var StandardFontEmbedder = /** @class */ (function () {
         var fontDict = context.obj({
             Type: 'Font',
             Subtype: 'Type1',
-            BaseFont: this.font.FontName,
+            BaseFont: this.customName || this.fontName,
             Encoding: this.encoding === standard_fonts_1.Encodings.WinAnsi ? 'WinAnsiEncoding' : undefined,
         });
         if (ref) {
@@ -83,7 +89,9 @@ var StandardFontEmbedder = /** @class */ (function () {
         }
         return glyphs;
     };
-    StandardFontEmbedder.for = function (fontName) { return new StandardFontEmbedder(fontName); };
+    StandardFontEmbedder.for = function (fontName, customName) {
+        return new StandardFontEmbedder(fontName, customName);
+    };
     return StandardFontEmbedder;
 }());
 exports.default = StandardFontEmbedder;
