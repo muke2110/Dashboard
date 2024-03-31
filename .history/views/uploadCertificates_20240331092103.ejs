@@ -248,15 +248,24 @@
                     pdf.getPage(1).then(function (page) {
                         var viewport = page.getViewport({ scale: 1.0 });
         
-                        // Use the viewport size to create the canvas
+                        // Get PDF dimensions
+                        var pdfWidth = viewport.width;
+                        var pdfHeight = viewport.height;
+        
+                        // Calculate scaling factor (adjust as needed)
+                        var scaleFactor = 0.5; // Adjust scaling factor as desired
+                        var scaledWidth = pdfWidth * scaleFactor;
+                        var scaledHeight = pdfHeight * scaleFactor;
+        
+                        // Set canvas size
                         canvas = document.createElement("canvas");
-                        canvas.width = viewport.width;
-                        canvas.height = viewport.height;
+                        canvas.width = scaledWidth;
+                        canvas.height = scaledHeight;
         
                         var ctx = canvas.getContext("2d");
                         var renderContext = {
                             canvasContext: ctx,
-                            viewport: viewport,
+                            viewport: page.getViewport({ scale: scaleFactor }),
                         };
                         page.render(renderContext);
         
@@ -270,11 +279,11 @@
                         canvas.addEventListener("click", function (event) {
                             var x = event.offsetX;
                             var y = event.offsetY;
-                        
+        
                             if (currentPosition) {
                                 // Use the actual x-coordinate without adjustments
                                 var adjustedX = x;
-                        
+        
                                 switch (currentPosition) {
                                     case "Name":
                                         nameX = adjustedX;
@@ -303,7 +312,7 @@
                             } else {
                                 console.log("Position selection canceled. No position selected.");
                             }
-                        });                                               
+                        });
                     });
                 }).catch(function (error) {
                     console.error("Error rendering PDF:", error);
@@ -311,7 +320,7 @@
             };
             fileReader.readAsArrayBuffer(pdfFile);
         }
-
+        
         function calculateScale(width, height) {
           var modalWidth = window.innerWidth * 0.9;
           var modalHeight = window.innerHeight * 0.9;
