@@ -34,18 +34,18 @@ async function overlayTextOnTemplate(templatePDFBuffer, name, eventName, certifi
         const textWidth = font.widthOfTextAtSize(name, fontSize);
         const textHeight = font.heightAtSize(fontSize);
 
-        // Obtain page height
-        const pageHeight = page.getHeight();
+        // Obtain page width
+        const pageWidth = page.getWidth();
 
-        const exactXCoordinateName = xCoordinateName - (textWidth / 2); // Adjust for text width
-        const exactYCoordinateName = pageHeight - yCoordinateName - textHeight; // Adjust for text height
+        // Adjust x-coordinates from the right side
+        const exactXCoordinateName = pageWidth - xCoordinateName - (textWidth / 2);
+        const exactXCoordinateEventName = pageWidth - xCoordinateEventName - (textWidth / 2);
+        const exactXCoordinateDate = pageWidth - xCoordinateDate - (textWidth / 2);
 
-        const exactXCoordinateEventName = xCoordinateEventName - (textWidth / 2); // Adjust for text width
-        const exactYCoordinateEventName = pageHeight - yCoordinateEventName - textHeight; // Adjust for text height
-
-        const exactXCoordinateDate = xCoordinateDate - (textWidth / 2); // Adjust for text width
-        const exactYCoordinateDate = pageHeight - yCoordinateDate - textHeight; // Adjust for text height
-
+        // Adjust y-coordinates from the top
+        const exactYCoordinateName = yCoordinateName - (textHeight / 2);
+        const exactYCoordinateEventName = yCoordinateEventName - (textHeight / 2);
+        const exactYCoordinateDate = yCoordinateDate - (textHeight / 2);
 
         // Draw text on the page using calculated exact coordinates
         page.drawText(name, { x: exactXCoordinateName, y: exactYCoordinateName, size: fontSize, font: font, color: rgb(0, 0, 0) });

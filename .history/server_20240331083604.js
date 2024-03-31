@@ -383,7 +383,7 @@ app.post('/admin_Dashboard/uploadCertificates', upload.fields([{ name: 'pdfFileI
             if (!existingStudent) {
                 console.error("Student not found in the database.");
                 // Handle error appropriately, maybe log it or return a response
-                continue;
+                continue; // Skip to the next iteration if student not found
             }
             const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E5);
             await collection_student.updateOne(

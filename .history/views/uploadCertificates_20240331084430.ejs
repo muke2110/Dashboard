@@ -266,30 +266,27 @@
         
                         openPdfModal();
         
-                        // Inside the click event listener for the canvas
                         canvas.addEventListener("click", function (event) {
-                            var x = event.offsetX;
-                            var y = event.offsetY;
-                        
+                            var rect = canvas.getBoundingClientRect();
+                            var x = event.clientX - rect.left;
+                            var y = event.clientY - rect.top;
+        
                             if (currentPosition) {
-                                // Use the actual x-coordinate without adjustments
-                                var adjustedX = x;
-                        
                                 switch (currentPosition) {
                                     case "Name":
-                                        nameX = adjustedX;
+                                        nameX = viewport.width - x; // Adjust x-coordinate from the right side
                                         nameY = y;
                                         namePositionXInput.value = nameX;
                                         namePositionYInput.value = nameY;
                                         break;
                                     case "Event":
-                                        eventX = adjustedX;
+                                        eventX = viewport.width - x; // Adjust x-coordinate from the right side
                                         eventY = y;
                                         eventPositionXInput.value = eventX;
                                         eventPositionYInput.value = eventY;
                                         break;
                                     case "Date":
-                                        dateX = adjustedX;
+                                        dateX = viewport.width - x; // Adjust x-coordinate from the right side
                                         dateY = y;
                                         datePositionXInput.value = dateX;
                                         datePositionYInput.value = dateY;
@@ -303,7 +300,7 @@
                             } else {
                                 console.log("Position selection canceled. No position selected.");
                             }
-                        });                                               
+                        });
                     });
                 }).catch(function (error) {
                     console.error("Error rendering PDF:", error);

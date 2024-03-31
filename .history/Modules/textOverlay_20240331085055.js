@@ -38,14 +38,13 @@ async function overlayTextOnTemplate(templatePDFBuffer, name, eventName, certifi
         const pageHeight = page.getHeight();
 
         const exactXCoordinateName = xCoordinateName - (textWidth / 2); // Adjust for text width
-        const exactYCoordinateName = pageHeight - yCoordinateName - textHeight; // Adjust for text height
-
+        const exactYCoordinateName = pageHeight - yCoordinateName - (textHeight / 2); // Adjust for text height
+        
         const exactXCoordinateEventName = xCoordinateEventName - (textWidth / 2); // Adjust for text width
-        const exactYCoordinateEventName = pageHeight - yCoordinateEventName - textHeight; // Adjust for text height
-
+        const exactYCoordinateEventName = pageHeight - yCoordinateEventName - (textHeight / 2); // Adjust for text height
+        
         const exactXCoordinateDate = xCoordinateDate - (textWidth / 2); // Adjust for text width
-        const exactYCoordinateDate = pageHeight - yCoordinateDate - textHeight; // Adjust for text height
-
+        const exactYCoordinateDate = pageHeight - yCoordinateDate - (textHeight / 2); // Adjust for text height
 
         // Draw text on the page using calculated exact coordinates
         page.drawText(name, { x: exactXCoordinateName, y: exactYCoordinateName, size: fontSize, font: font, color: rgb(0, 0, 0) });

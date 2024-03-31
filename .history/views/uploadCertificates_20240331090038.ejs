@@ -268,13 +268,17 @@
         
                         // Inside the click event listener for the canvas
                         canvas.addEventListener("click", function (event) {
-                            var x = event.offsetX;
-                            var y = event.offsetY;
-                        
+                            var rect = canvas.getBoundingClientRect();
+                            var x = event.clientX - rect.left;
+                            var y = event.clientY - rect.top;
+
                             if (currentPosition) {
-                                // Use the actual x-coordinate without adjustments
+                                // Check if the click is on the right side of the canvas
                                 var adjustedX = x;
-                        
+                                if (x > viewport.width / 2) {
+                                    adjustedX = viewport.width - x; // Adjust x-coordinate from the right side
+                                }
+
                                 switch (currentPosition) {
                                     case "Name":
                                         nameX = adjustedX;
@@ -303,7 +307,7 @@
                             } else {
                                 console.log("Position selection canceled. No position selected.");
                             }
-                        });                                               
+                        });
                     });
                 }).catch(function (error) {
                     console.error("Error rendering PDF:", error);

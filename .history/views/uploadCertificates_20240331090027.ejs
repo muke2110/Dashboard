@@ -267,43 +267,48 @@
                         openPdfModal();
         
                         // Inside the click event listener for the canvas
-                        canvas.addEventListener("click", function (event) {
-                            var x = event.offsetX;
-                            var y = event.offsetY;
-                        
-                            if (currentPosition) {
-                                // Use the actual x-coordinate without adjustments
-                                var adjustedX = x;
-                        
-                                switch (currentPosition) {
-                                    case "Name":
-                                        nameX = adjustedX;
-                                        nameY = y;
-                                        namePositionXInput.value = nameX;
-                                        namePositionYInput.value = nameY;
-                                        break;
-                                    case "Event":
-                                        eventX = adjustedX;
-                                        eventY = y;
-                                        eventPositionXInput.value = eventX;
-                                        eventPositionYInput.value = eventY;
-                                        break;
-                                    case "Date":
-                                        dateX = adjustedX;
-                                        dateY = y;
-                                        datePositionXInput.value = dateX;
-                                        datePositionYInput.value = dateY;
-                                        break;
-                                    default:
-                                        console.log("Unknown position:", currentPosition);
-                                        break;
-                                }
-                                console.log("Position " + currentPosition + " selected:", { x: x, y: y });
-                                closePdfModal();
-                            } else {
-                                console.log("Position selection canceled. No position selected.");
-                            }
-                        });                                               
+canvas.addEventListener("click", function (event) {
+    var rect = canvas.getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
+
+    if (currentPosition) {
+        // Check if the click is on the right side of the canvas
+        var adjustedX = x;
+        if (x > viewport.width / 2) {
+            adjustedX = viewport.width - x; // Adjust x-coordinate from the right side
+        }
+
+        switch (currentPosition) {
+            case "Name":
+                nameX = adjustedX;
+                nameY = y;
+                namePositionXInput.value = nameX;
+                namePositionYInput.value = nameY;
+                break;
+            case "Event":
+                eventX = adjustedX;
+                eventY = y;
+                eventPositionXInput.value = eventX;
+                eventPositionYInput.value = eventY;
+                break;
+            case "Date":
+                dateX = adjustedX;
+                dateY = y;
+                datePositionXInput.value = dateX;
+                datePositionYInput.value = dateY;
+                break;
+            default:
+                console.log("Unknown position:", currentPosition);
+                break;
+        }
+        console.log("Position " + currentPosition + " selected:", { x: x, y: y });
+        closePdfModal();
+    } else {
+        console.log("Position selection canceled. No position selected.");
+    }
+});
+
                     });
                 }).catch(function (error) {
                     console.error("Error rendering PDF:", error);

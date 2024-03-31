@@ -34,23 +34,10 @@ async function overlayTextOnTemplate(templatePDFBuffer, name, eventName, certifi
         const textWidth = font.widthOfTextAtSize(name, fontSize);
         const textHeight = font.heightAtSize(fontSize);
 
-        // Obtain page height
-        const pageHeight = page.getHeight();
-
-        const exactXCoordinateName = xCoordinateName - (textWidth / 2); // Adjust for text width
-        const exactYCoordinateName = pageHeight - yCoordinateName - textHeight; // Adjust for text height
-
-        const exactXCoordinateEventName = xCoordinateEventName - (textWidth / 2); // Adjust for text width
-        const exactYCoordinateEventName = pageHeight - yCoordinateEventName - textHeight; // Adjust for text height
-
-        const exactXCoordinateDate = xCoordinateDate - (textWidth / 2); // Adjust for text width
-        const exactYCoordinateDate = pageHeight - yCoordinateDate - textHeight; // Adjust for text height
-
-
         // Draw text on the page using calculated exact coordinates
-        page.drawText(name, { x: exactXCoordinateName, y: exactYCoordinateName, size: fontSize, font: font, color: rgb(0, 0, 0) });
-        page.drawText(eventName, { x: exactXCoordinateEventName, y: exactYCoordinateEventName, size: fontSize, font: font, color: rgb(0, 0, 0) });
-        page.drawText(certificateDate, { x: exactXCoordinateDate, y: exactYCoordinateDate, size: fontSize, font: font, color: rgb(0, 0, 0) });
+        page.drawText(name, { x: xCoordinateName - textWidth / 2, y: yCoordinateName - textHeight / 2, size: fontSize, font: font, color: rgb(0, 0, 0) });
+        page.drawText(eventName, { x: xCoordinateEventName - textWidth / 2, y: yCoordinateEventName - textHeight / 2, size: fontSize, font: font, color: rgb(0, 0, 0) });
+        page.drawText(certificateDate, { x: xCoordinateDate - textWidth / 2, y: yCoordinateDate - textHeight / 2, size: fontSize, font: font, color: rgb(0, 0, 0) });
 
         const pdfBytes = await pdfDoc.save();
         return pdfBytes;

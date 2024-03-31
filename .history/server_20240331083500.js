@@ -383,17 +383,18 @@ app.post('/admin_Dashboard/uploadCertificates', upload.fields([{ name: 'pdfFileI
             if (!existingStudent) {
                 console.error("Student not found in the database.");
                 // Handle error appropriately, maybe log it or return a response
-                continue;
+                continue; // Skip to the next iteration if student not found
             }
             const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E5);
+            // Update student document with certificate information
             await collection_student.updateOne(
                 { roll_number: `${roll_number}` },
                 {
                     $push: {
-                        certificate_path: `${outputPDFPath}`,
+                        certificate_path: `${outputPDFPath}`, // Use the path to the generated PDF
                         certificate_id: `${uniqueSuffix}`,
-                        certificate_date: new Date(), 
-                        certificate_type: eventName,
+                        certificate_date: new Date(), // Assuming current date
+                        certificate_type: eventName, // You can modify this as needed
                         app_points: app_points,
                     }
                 }
