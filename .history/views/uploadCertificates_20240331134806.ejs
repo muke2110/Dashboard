@@ -1,93 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Upload PDF, Image, or CSV and Select Positions</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="/uploadpage.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link rel="stylesheet" href="/uploadpage.css" />
     <style>
-        /* CSS for modal popup */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            height: 90%;
-            overflow: hidden;
-            background-color: rgba(0, 0, 0, 0.5);
+      /* CSS for modal popup */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        height: 90%;
+        overflow: hidden;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+      .modal-content {
+        background-color: #fefefe;
+        padding: 0;
+        border: 1px solid #888;
+        width: 100%;
+        height: 100%;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+          0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        overflow-y: auto; /* Enable vertical scrolling */
+        position: relative;
+      }
+      /* Add animation on modal popup */
+      @keyframes animatetop {
+        from {
+          top: -300px;
+          opacity: 0;
         }
-
-        .modal-content {
-            background-color: #fefefe;
-            padding: 0;
-            border: 1px solid #888;
-            width: 100%;
-            height: 100%;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-            overflow-y: auto; /* Enable vertical scrolling */
-            position: relative;
+        to {
+          top: 0;
+          opacity: 1;
         }
-
-        /* Add animation on modal popup */
-        @keyframes animatetop {
-            from {
-                top: -300px;
-                opacity: 0;
-            }
-            to {
-                top: 0;
-                opacity: 1;
-            }
-        }
-
-        /* Close button style */
-        .close {
-            color: #aaa;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-        }
-
-        /* CSS for canvas */
-        #pdfViewer canvas {
-            display: block;
-            margin: 0 auto;
-            max-width: 100%;
-            max-height: 100%;
-            cursor: crosshair;
-        }
+      }
+      /* Close button style */
+      .close {
+        color: #aaa;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+      }
+      /* CSS for canvas */
+      #pdfViewer canvas {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        max-height: 100%;
+      }
     </style>
-</head>
-<body>
-<div class="dashboard-container">
-    <h1>Upload PDF, Image, or CSV and Select Positions</h1>
-    <form id="positionSelectionForm" action="/admin_Dashboard/uploadCertificates" method="post" enctype="multipart/form-data">
-        <input type="file" id="fileInput" name="pdfFileInput" accept=".pdf,.png,.jpeg,.csv" required />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <h1>Upload PDF, Image, or CSV and Select Positions</h1>
+      <form
+        id="positionSelectionForm"
+        action="/admin_Dashboard/uploadCertificates"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <input
+          type="file"
+          id="fileInput"
+          name="pdfFileInput"
+          accept=".pdf,.png,.jpeg,.csv"
+          required
+        />
         <button type="button" id="uploadFileButton">Upload File</button>
 
-        <input type="file" id="csvFileInput" name="csvFileInput" accept=".csv, .xlsx" required />
+        <input
+          type="file"
+          id="csvFileInput"
+          name="csvFileInput"
+          accept=".csv, .xlsx"
+          required
+        />
         <button type="button" id="uploadCsvButton">Upload CSV File</button>
 
-        <button type="button" id="selectPositionName" name="selectPositionName" style="display: none">Select Name Position</button>
-        <button type="button" id="selectPositionEvent" name="selectPositionEvent" style="display: none">Select Event Position</button>
-        <button type="button" id="selectPositionDate" name="selectPositionDate" style="display: none">Select Date Position</button>
+        <button
+          type="button"
+          id="selectPositionName"
+          name="selectPositionName"
+          style="display: none"
+        >
+          Select Name Position
+        </button>
+        <button
+          type="button"
+          id="selectPositionEvent"
+          name="selectPositionEvent"
+          style="display: none"
+        >
+          Select Event Position
+        </button>
+        <button
+          type="button"
+          id="selectPositionDate"
+          name="selectPositionDate"
+          style="display: none"
+        >
+          Select Date Position
+        </button>
 
-        <button type="button" id="finishSelection" name="finishSelection" style="display: none">Finish Selection</button>
-        <button type="button" id="cancelSelection" name="cancelSelection" style="display: none">Cancel Selection</button>
+        <button
+          type="button"
+          id="finishSelection"
+          name="finishSelection"
+          style="display: none"
+        >
+          Finish Selection
+        </button>
+        <button
+          type="button"
+          id="cancelSelection"
+          name="cancelSelection"
+          style="display: none"
+        >
+          Cancel Selection
+        </button>
 
         <!-- Hidden input fields for coordinates -->
         <input type="hidden" id="namePositionXInput" name="namePositionX" />
@@ -97,38 +150,50 @@
         <input type="hidden" id="datePositionXInput" name="datePositionX" />
         <input type="hidden" id="datePositionYInput" name="datePositionY" />
 
-        <button type="button" id="previewCoordinatesButton">Preview Coordinates</button>
-        <button type="submit" id="submitButton" name="submitButton">Submit</button>
-    </form>
+        <button type="button" id="previewCoordinatesButton">
+          Preview Coordinates
+        </button>
+        <button type="submit" id="submitButton" name="submitButton">
+          Submit
+        </button>
+      </form>
 
-    <div id="selectedCoordinatesPreview" style="display: none">
+      <div id="selectedCoordinatesPreview" style="display: none">
         <h2>Selected Coordinates:</h2>
         <ul id="coordinatesList"></ul>
         <div id="pdfPreviewContainer" style="display: none"></div>
-        <button type="button" id="closePreviewButton" style="display: none">Close Preview</button>
+        <button type="button" id="closePreviewButton" style="display: none">
+          Close Preview
+        </button>
+      </div>
     </div>
-</div>
 
-<div id="pdfModal" class="modal">
-    <div class="modal-content">
+    <div id="pdfModal" class="modal">
+      <div class="modal-content">
         <span class="close" onclick="closePdfModal()">&times;</span>
         <div id="pdfViewer"></div>
+      </div>
     </div>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
         var fileInput = document.getElementById("fileInput");
         var uploadFileButton = document.getElementById("uploadFileButton");
         var selectPositionName = document.getElementById("selectPositionName");
-        var selectPositionEvent = document.getElementById("selectPositionEvent");
+        var selectPositionEvent = document.getElementById(
+          "selectPositionEvent"
+        );
         var selectPositionDate = document.getElementById("selectPositionDate");
         var cancelSelection = document.getElementById("cancelSelection");
         var namePositionXInput = document.getElementById("namePositionXInput");
         var namePositionYInput = document.getElementById("namePositionYInput");
-        var eventPositionXInput = document.getElementById("eventPositionXInput");
-        var eventPositionYInput = document.getElementById("eventPositionYInput");
+        var eventPositionXInput = document.getElementById(
+          "eventPositionXInput"
+        );
+        var eventPositionYInput = document.getElementById(
+          "eventPositionYInput"
+        );
         var datePositionXInput = document.getElementById("datePositionXInput");
         var datePositionYInput = document.getElementById("datePositionYInput");
         var pdfFile = null;
@@ -142,32 +207,32 @@
         var currentPosition = null;
 
         uploadFileButton.addEventListener("click", function () {
-            fileInput.click();
+          fileInput.click();
         });
 
         fileInput.addEventListener("change", function (event) {
-            pdfFile = event.target.files[0];
-            if (pdfFile) {
-                if (
-                    pdfFile.type === "application/pdf" ||
-                    pdfFile.type === "image/png" ||
-                    pdfFile.type === "image/jpeg"
-                ) {
-                    selectPositionName.style.display = "block";
-                    selectPositionEvent.style.display = "block";
-                    selectPositionDate.style.display = "block";
-                }
+          pdfFile = event.target.files[0];
+          if (pdfFile) {
+            if (
+              pdfFile.type === "application/pdf" ||
+              pdfFile.type === "image/png" ||
+              pdfFile.type === "image/jpeg"
+            ) {
+              selectPositionName.style.display = "block";
+              selectPositionEvent.style.display = "block";
+              selectPositionDate.style.display = "block";
             }
+          }
         });
 
         function openPdfModal() {
-            var modal = document.getElementById("pdfModal");
-            modal.style.display = "block";
+          var modal = document.getElementById("pdfModal");
+          modal.style.display = "block";
         }
 
         function closePdfModal() {
-            var modal = document.getElementById("pdfModal");
-            modal.style.display = "none";
+          var modal = document.getElementById("pdfModal");
+          modal.style.display = "none";
         }
 
         async function renderPdf() {
@@ -175,44 +240,41 @@
                 document.getElementById("pdfViewer").removeChild(canvas);
                 cancelSelection.style.display = "none";
             }
-
+        
             var fileReader = new FileReader();
             fileReader.onload = function () {
                 var typedarray = new Uint8Array(this.result);
                 pdfjsLib.getDocument(typedarray).promise.then(function (pdf) {
                     pdf.getPage(1).then(function (page) {
                         var viewport = page.getViewport({ scale: 1.0 });
-
+        
                         // Use the viewport size to create the canvas
                         canvas = document.createElement("canvas");
                         canvas.width = viewport.width;
                         canvas.height = viewport.height;
-
+        
                         var ctx = canvas.getContext("2d");
                         var renderContext = {
                             canvasContext: ctx,
                             viewport: viewport,
                         };
                         page.render(renderContext);
-
+        
                         var pdfViewer = document.getElementById("pdfViewer");
                         pdfViewer.innerHTML = "";
                         pdfViewer.appendChild(canvas);
-
+        
                         openPdfModal();
-
+        
                         // Inside the click event listener for the canvas
                         canvas.addEventListener("click", function (event) {
-                            var rect = canvas.getBoundingClientRect();
-                            var scaleX = canvas.width / rect.width;
-                            var scaleY = canvas.height / rect.height;
-                            var x = (event.clientX - rect.left) * scaleX;
-                            var y = (event.clientY - rect.top) * scaleY;
-
+                            var x = event.offsetX;
+                            var y = event.offsetY;
+                        
                             if (currentPosition) {
                                 // Use the actual x-coordinate without adjustments
                                 var adjustedX = x;
-
+                        
                                 switch (currentPosition) {
                                     case "Name":
                                         nameX = adjustedX;
@@ -241,7 +303,7 @@
                             } else {
                                 console.log("Position selection canceled. No position selected.");
                             }
-                        });
+                        });                                               
                     });
                 }).catch(function (error) {
                     console.error("Error rendering PDF:", error);
@@ -251,41 +313,41 @@
         }
 
         function calculateScale(width, height) {
-            var modalWidth = window.innerWidth * 0.9;
-            var modalHeight = window.innerHeight * 0.9;
-            var scaleX = modalWidth / width;
-            var scaleY = modalHeight / height;
-            return Math.min(scaleX, scaleY);
+          var modalWidth = window.innerWidth * 0.9;
+          var modalHeight = window.innerHeight * 0.9;
+          var scaleX = modalWidth / width;
+          var scaleY = modalHeight / height;
+          return Math.min(scaleX, scaleY);
         }
 
         selectPositionName.addEventListener("click", function () {
-            currentPosition = "Name";
-            renderPdf();
-            cancelSelection.style.display = "block";
+          currentPosition = "Name"; 
+          renderPdf();
+          cancelSelection.style.display = "block";
         });
 
         selectPositionEvent.addEventListener("click", function () {
-            currentPosition = "Event";
-            renderPdf();
-            cancelSelection.style.display = "block";
+          currentPosition = "Event";
+          renderPdf();
+          cancelSelection.style.display = "block";
         });
 
         selectPositionDate.addEventListener("click", function () {
-            currentPosition = "Date";
-            renderPdf();
-            cancelSelection.style.display = "block";
+          currentPosition = "Date";
+          renderPdf();
+          cancelSelection.style.display = "block";
         });
 
         cancelSelection.addEventListener("click", function () {
-            if (canvas) {
-                document.getElementById("pdfViewer").removeChild(canvas);
-                canvas = null;
-            }
-            cancelSelection.style.display = "none";
-            closePdfModal();
-            currentPosition = null;
+          if (canvas) {
+            document.getElementById("pdfViewer").removeChild(canvas);
+            canvas = null;
+          }
+          cancelSelection.style.display = "none";
+          closePdfModal();
+          currentPosition = null;
         });
-    });
-</script>
-</body>
+      });
+    </script>
+  </body>
 </html>

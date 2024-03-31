@@ -46,9 +46,8 @@ async function overlayTextOnTemplate(templatePDFBuffer, name, eventName, certifi
         const exactYCoordinateDate = pageHeight - yCoordinateDate - textHeight; // Adjust for text height
 
 
-
         // Draw text on the page using calculated exact coordinates
-        page.drawText(name, { x: exactXCoordinateName, y: exactYCoordinateName, size: fontSize, font: font, color: rgb(0, 0, 0) });
+, { x: exactXCoordinateName, y: exactYCoordinateName, size: fontSize, font: font, color: rgb(0, 0, 0) });
         page.drawText(eventName, { x: exactXCoordinateEventName, y: exactYCoordinateEventName, size: fontSize, font: font, color: rgb(0, 0, 0) });
         page.drawText(certificateDate, { x: exactXCoordinateDate, y: exactYCoordinateDate, size: fontSize, font: font, color: rgb(0, 0, 0) });
 

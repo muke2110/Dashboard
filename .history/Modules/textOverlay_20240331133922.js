@@ -34,17 +34,17 @@ async function overlayTextOnTemplate(templatePDFBuffer, name, eventName, certifi
         const textWidth = font.widthOfTextAtSize(name, fontSize);
         const textHeight = font.heightAtSize(fontSize);
 
-        const pageHeight = page.getHeight();
+        // Obtain page height
+        const textWidth = font.widthOfTextAtSize(name, fontSize);
 
-        const exactXCoordinateName = xCoordinateName; // Start from the cursor position
+        const exactXCoordinateName = xCoordinateName - (textWidth / 2); // Adjust for text width
         const exactYCoordinateName = pageHeight - yCoordinateName - textHeight; // Adjust for text height
 
-        const exactXCoordinateEventName = xCoordinateEventName; // Start from the cursor position
+        const exactXCoordinateEventName = xCoordinateEventName - (textWidth / 2); // Adjust for text width
         const exactYCoordinateEventName = pageHeight - yCoordinateEventName - textHeight; // Adjust for text height
 
-        const exactXCoordinateDate = xCoordinateDate; // Start from the cursor position
+        const exactXCoordinateDate = xCoordinateDate - (textWidth / 2); // Adjust for text width
         const exactYCoordinateDate = pageHeight - yCoordinateDate - textHeight; // Adjust for text height
-
 
 
         // Draw text on the page using calculated exact coordinates
