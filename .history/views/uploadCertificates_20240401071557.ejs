@@ -10,7 +10,7 @@
 </head>
 <body>
     <% if (typeof message != 'undefined') { %>
-        <div class="notification" id="notification">
+        <div class="success-message">
             <%= message %>
         </div>
     <% } %>
@@ -229,16 +229,6 @@
             closePdfModal();
             currentPosition = null;
         });
-    });
-    document.addEventListener("DOMContentLoaded", function () {
-        // Show toast notification
-        var toast = document.getElementById("toast");
-        if (toast) {
-            toast.className = "toast show"; // Show the toast
-            setTimeout(function(){
-                toast.className = toast.className.replace("show", ""); // Hide the toast after 3 seconds
-            }, 3000);
-        }
     });
 </script>
 </body>

@@ -9,11 +9,6 @@
     <link rel="stylesheet" href="/uploadpage.css">
 </head>
 <body>
-    <% if (typeof message != 'undefined') { %>
-        <div class="notification" id="notification">
-            <%= message %>
-        </div>
-    <% } %>
 <div class="dashboard-container">
     <h1>Upload PDF, Image, or CSV and Select Positions</h1>
     <form id="positionSelectionForm" action="/admin_Dashboard/uploadCertificates" method="post" enctype="multipart/form-data">
@@ -49,7 +44,7 @@
         <button type="button" id="closePreviewButton" style="display: none">Close Preview</button>
     </div>
     <a href="/">
-        <button class="backbtn">Back</button>
+        <button class="">Back</button>
     </a>
 </div>
 
@@ -229,16 +224,6 @@
             closePdfModal();
             currentPosition = null;
         });
-    });
-    document.addEventListener("DOMContentLoaded", function () {
-        // Show toast notification
-        var toast = document.getElementById("toast");
-        if (toast) {
-            toast.className = "toast show"; // Show the toast
-            setTimeout(function(){
-                toast.className = toast.className.replace("show", ""); // Hide the toast after 3 seconds
-            }, 3000);
-        }
     });
 </script>
 </body>

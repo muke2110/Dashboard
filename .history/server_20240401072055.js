@@ -404,7 +404,7 @@ app.post('/admin_Dashboard/uploadCertificates', upload.fields([{ name: 'pdfFileI
         }
         console.log("All files generated certificates");
         // res.send('Certificates generated, sent, and uploaded successfully.');
-        res.render('uploadCertificates', { message: 'Certificates Generated Successfully' });
+        res.render('uploadCertificates', { message: '' });
     } catch (error) {
         console.error('Error processing file:', error);
         res.status(500).send('Error processing file.');
