@@ -37,9 +37,7 @@ app.use('student',student);
 app.use('admin',adminInfo);
 app.use(cors());
 
-
 //GET routes
-
 //REDIRECTS TO RESPECTED DASHBOARDS
 app.get("/", async (req, res) => {
     try {
@@ -830,8 +828,8 @@ app.post('/delete-issue/:id', async (req, res) => {
 
 
 //Test Routes
-app.post('/TestPostRoute',async (req, res) => {
-    res.send("This is a test Route using POST Method")
+app.post('/generate-pdf',async (req, res) => {
+    res.send("This is a test Route using GET Method")
 });
 
 app.get('/TestGetRoute',(req,res)=>{

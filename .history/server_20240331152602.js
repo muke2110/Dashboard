@@ -37,9 +37,7 @@ app.use('student',student);
 app.use('admin',adminInfo);
 app.use(cors());
 
-
 //GET routes
-
 //REDIRECTS TO RESPECTED DASHBOARDS
 app.get("/", async (req, res) => {
     try {
@@ -830,13 +828,36 @@ app.post('/delete-issue/:id', async (req, res) => {
 
 
 //Test Routes
-app.post('/TestPostRoute',async (req, res) => {
-    res.send("This is a test Route using POST Method")
+app.post('/generate-pdf', upload.single('pdfFile'), async (req, res) => {
+    try {
+        const { input1, input2, input3, x, y } = req.body;
+        const pdfTemplatePath = req.file.path;
+
+        // Load PDF template
+        const pdfBytes = fs.readFileSync(pdfTemplatePath);
+        const pdfDoc = await PDFDocument.load(pdfBytes);
+        const page = pdfDoc.getPages()[0];
+
+        // Convert coordinates to numbers
+        const xCoord = parseInt(x);
+        const yCoord = parseInt(y);
+
+        // Add text to specific coordinates
+        page.drawText(input1, { x: xCoord, y: yCoord, size: 12 });
+        // Add more text as needed
+
+        // Save the modified PDF
+        const modifiedPdfBytes = await pdfDoc.save();
+        fs.writeFileSync('modified.pdf', modifiedPdfBytes);
+
+        res.download('modified.pdf');
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
-app.get('/TestGetRoute',(req,res)=>{
-    res.send("This is a test Route using GET Method")
-})
+
 
 
 //APP LISTENER

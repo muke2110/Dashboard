@@ -37,9 +37,7 @@ app.use('student',student);
 app.use('admin',adminInfo);
 app.use(cors());
 
-
 //GET routes
-
 //REDIRECTS TO RESPECTED DASHBOARDS
 app.get("/", async (req, res) => {
     try {
