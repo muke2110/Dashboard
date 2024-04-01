@@ -776,7 +776,8 @@ app.post('/verifyAndResetPassword', async (req, res) => {
 
             // Check if user exists
             if (!user) {
-                return res.status(404).send('User not found');
+                // return res.status(404).send('User not found');
+                return res.redirect("/verificationPage?error=Passwords do not match");
             }
     
             const isOTPValid = user.resetOTP.includes(otp);
@@ -792,7 +793,7 @@ app.post('/verifyAndResetPassword', async (req, res) => {
     
             // Check if passwords match
             if (password !== confirmPassword) {
-                return res.redirect("/verificationPage?error=Passwords do not match");
+                return res.status(400).send('Passwords do not match');
             }
     
             // Hash the new password

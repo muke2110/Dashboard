@@ -780,19 +780,19 @@ app.post('/verifyAndResetPassword', async (req, res) => {
             }
     
             const isOTPValid = user.resetOTP.includes(otp);
-            if (!isOTPValid) {
-                return res.redirect("/verificationPage?error=Incorrect or expired OTP");
-            }
+if (!isOTPValid) {
+    return res.redirect("/?error=Incorrect or expired OTP");
+}
 
             // Check if OTP is valid
-            // const isOTPValid = user.resetOTP.includes(otp);
-            // if (!isOTPValid) {
-            //     return res.status(400).send('Incorrect or expired OTP');
-            // }
+            const isOTPValid = user.resetOTP.includes(otp);
+            if (!isOTPValid) {
+                return res.status(400).send('Incorrect or expired OTP');
+            }
     
             // Check if passwords match
             if (password !== confirmPassword) {
-                return res.redirect("/verificationPage?error=Passwords do not match");
+                return res.status(400).send('Passwords do not match');
             }
     
             // Hash the new password

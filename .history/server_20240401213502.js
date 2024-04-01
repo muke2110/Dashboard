@@ -697,13 +697,9 @@ app.post('/forgetPassword', async (req, res) => {
         }
 
         // Generate OTP (you can use any library for this)
-        const otp = otpGenerator.generate(6, {
-            digits: true ,
-            lowerCaseAlphabets: false,
+        const otp = otpGenerator.generate(6, { digits: true ,lowerCaseAlphabets: false;
             upperCaseAlphabets: false,
-            specialChars: false
-        });
-
+            specialChars: false});
         console.log('Generated OTP:', otp);
 
         // Update or insert OTP into the user document
@@ -779,20 +775,15 @@ app.post('/verifyAndResetPassword', async (req, res) => {
                 return res.status(404).send('User not found');
             }
     
+            // Check if OTP is valid
             const isOTPValid = user.resetOTP.includes(otp);
             if (!isOTPValid) {
-                return res.redirect("/verificationPage?error=Incorrect or expired OTP");
+                return res.status(400).send('Incorrect or expired OTP');
             }
-
-            // Check if OTP is valid
-            // const isOTPValid = user.resetOTP.includes(otp);
-            // if (!isOTPValid) {
-            //     return res.status(400).send('Incorrect or expired OTP');
-            // }
     
             // Check if passwords match
             if (password !== confirmPassword) {
-                return res.redirect("/verificationPage?error=Passwords do not match");
+                return res.status(400).send('Passwords do not match');
             }
     
             // Hash the new password

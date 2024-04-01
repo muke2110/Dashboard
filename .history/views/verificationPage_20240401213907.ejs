@@ -11,15 +11,6 @@
             const errorDiv = document.getElementById('error-message');
             errorDiv.innerText = message;
         }
-
-        // Script to display error message on page load
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const errorMessage = urlParams.get('error');
-            if (errorMessage) {
-                displayErrorMessage(errorMessage);
-            }
-        };
     </script>
 </head>
 <body>
@@ -40,8 +31,13 @@
             </div>
             <button type="submit">Submit</button>
         </form>
-
-        <div id="error-message" style="color: red;"></div>
     </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorMessage = urlParams.get('error');
+        if (errorMessage) {
+            displayErrorMessage(errorMessage);
+        }
+    </script>
 </body>
 </html>

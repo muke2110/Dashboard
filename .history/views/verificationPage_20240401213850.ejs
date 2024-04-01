@@ -5,22 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password Reset Verification</title>
     <link rel="stylesheet" href="/verificationPage.css">
-    <script>
-        // Function to display error message for incorrect/expired OTP
-        function displayErrorMessage(message) {
-            const errorDiv = document.getElementById('error-message');
-            errorDiv.innerText = message;
-        }
-
-        // Script to display error message on page load
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const errorMessage = urlParams.get('error');
-            if (errorMessage) {
-                displayErrorMessage(errorMessage);
-            }
-        };
-    </script>
 </head>
 <body>
     <div class="container">
@@ -40,8 +24,13 @@
             </div>
             <button type="submit">Submit</button>
         </form>
-
-        <div id="error-message" style="color: red;"></div>
     </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorMessage = urlParams.get('error');
+        if (errorMessage) {
+            displayErrorMessage(errorMessage);
+        }
+    </script>
 </body>
 </html>
