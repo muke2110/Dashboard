@@ -329,6 +329,10 @@ app.get('/UploadsHistory',(req,res)=>{
                     res.redirect('/')
                 }
                 else if(decoded.role === 'admin'){
+                    // Assuming you fetch issues from MongoDB and store them in the `issues` variable
+                    const issues = await issueForm.find().sort({ date: -1 });
+                    // console.log(issues);
+                    // Render the studentIssues.ejs template and pass the issues variable
                     res.render('uploadHistory');
                 }
             });

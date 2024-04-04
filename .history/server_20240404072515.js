@@ -314,33 +314,9 @@ app.get('/report-issue', (req, res) => {
     }
 });
 
-//Only for Admins
+
 app.get('/UploadsHistory',(req,res)=>{
-    try {
-        const token = req.cookies['uid'];
-        if (token) {
-            // Verify the token
-            jwt.verify(token, secretKey, async (err, decoded) => {
-                if (err) {
-                    // If token is not valid, render the login page
-                    res.render('login');
-                }               
-                else if(decoded.role != 'admin'){
-                    res.redirect('/')
-                }
-                else if(decoded.role === 'admin'){
-                    res.render('uploadHistory');
-                }
-            });
-        } 
-        else {
-            // No token found, render the login page
-            res.redirect('/');
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
+    res.render('upla')
 })
 
 
