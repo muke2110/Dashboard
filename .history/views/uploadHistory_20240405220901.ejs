@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload History</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+    <div class="container">
+        <h1>Upload History</h1>
+        <% if (history.length > 0) { %>
+            <div class="history-list">
+                <% history.forEach(item => { %>
+                    <div class="history-item">
+                        <button class="date-button" data-pdf="<%= item.Pdf_path %>" data-xlsx="<%= item.xlsx_path %>">
+                            <%= new Date(item.timestamp).toLocaleString() %>
+                        </button>
+                        <div class="action-buttons hidden">
+                            <form action="/viewFile" method="post" target="_blank">
+                                <input type="hidden" name="filePath">
+                                <button type="submit" class="view-button">View</button>
+                            </form>
+                            <form action="/downloadFile" method="post">
+                                <input type="hidden" name="filePath">
+                                <button type="submit" class="download-button">Download</button>
+                            </form>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p class="no-history">No upload history available.</p>
+        <% } %>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateButtons = document.querySelectorAll('.date-button');
+
+            dateButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const actionButtons = this.nextElementSibling;
+                    if (actionButtons.classList.contains('hidden')) {
+                        // Hide all action buttons
+                        document.querySelectorAll('.action-buttons').forEach(element => {
+                            element.classList.add('hidden');
+                        });
+                        // Show action buttons for this item
+                        actionButtons.classList.remove('hidden');
+                    } else {
+                        // Hide action buttons if already shown
+                        actionButtons.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Add event listeners for action buttons
+            const viewButtons = document.querySelectorAll('.view-button');
+            const downloadButtons = document.querySelectorAll('.download-button');
+
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const pdfPath = this.closest('.history-item').querySelector('.date-button').getAttribute('data-pdf');
+                    this.closest('form').querySelector('input[name="filePath"]').value = pdfPath;
+                });
+            });
+
+            downloadButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const pdfPath = this.closest('.history-item').querySelector('.date-button').getAttribute('data-pdf');
+                    this.closest('form').querySelector('input[name="filePath"]').value = pdfPath;
+                });
+            });
+        });       
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload History</title>
+    <link rel="stylesheet" href="/styles/history.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Upload History</h1>
+        <% if (history.length > 0) { %>
+            <div class="history-list">
+                <% history.forEach(item => { %>
+                    <div class="history-item">
+                        <button class="date-button" data-pdf="<%= item.Pdf_path %>" data-xlsx="<%= item.xlsx_path %>">
+                            <%= new Date(item.timestamp).toLocaleString() %>
+                        </button>
+                        <div class="action-buttons hidden">
+                            <a href="#" class="details-link">View Details</a>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p class="no-history">No upload history available.</p>
+        <% } %>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateButtons = document.querySelectorAll('.date-button');
+            
+            dateButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const pdfPath = this.getAttribute('data-pdf');
+                    const xlsxPath = this.getAttribute('data-xlsx');
+                    
+                    // Dynamically create a new window
+                    const newWindow = window.open('', '_blank');
+                    
+                    // Load PDF file in the new window
+                    newWindow.document.write('<embed src="' + pdfPath + '" type="application/pdf" width="100%" height="600px">');
+                    
+                    // Append iframe for XLSX file
+                    const iframe = document.createElement('iframe');
+                    iframe.src = xlsxPath;
+                    iframe.style.width = '100%';
+                    iframe.style.height = '600px';
+                    newWindow.document.body.appendChild(iframe);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

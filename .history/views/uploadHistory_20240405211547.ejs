@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload History</title>
+</head>
+<body>
+    <h1>Upload History</h1>
+    <% if (history.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Actions</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% history.forEach(item => { %>
+                    <tr>
+                        <td>
+                            <form action="/viewFile" method="post" target="_blank" style="display:inline;">
+                                <input type="hidden" name="filePath" value="<%= item.Pdf_path %>">
+                                <button type="submit">View PDF</button>
+                            </form>
+                            <form action="/downloadFile" method="post" style="display:inline;">
+                                <input type="hidden" name="filePath" value="<%= item.Pdf_path %>">
+                                <button type="submit">Download PDF</button>
+                            </form>
+                            <form action="/viewFile" method="post" style="display:inline;">
+                                <input type="hidden" name="filePath" value="<%= item.xlsx_path %>">
+                                <button type="submit">View XLSX</button>
+                            </form>
+                            <form action="/downloadFile" method="post" style="display:inline;">
+                                <input type="hidden" name="filePath" value="<%= item.xlsx_path %>">
+                                <button type="submit">Download XLSX</button>
+                            </form>
+                        </td>
+                        <td><%= item.timestamp %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>No upload history available.</p>
+    <% } %>
+</body>
+</html>
