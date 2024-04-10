@@ -1,7 +1,0 @@
-
-collection_student.updateOne(
-    {roll_number : 21711A0540},
-    $push{certificate_path: /*new path*/}
-)
-
-
