@@ -596,30 +596,6 @@ app.post('/download-certificate', (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-
-
-
-app.post('/download', (req, res) => {
-    const filePath = req.body.filePath; // Get file path from form data
-    const fileType = req.body.fileType; // Get file type from form data
-
-    // Check if the file exists
-    if (fs.existsSync(filePath)) {
-        // Set appropriate headers for file download
-        res.setHeader('Content-disposition', `attachment; filename=${path.basename(filePath)}`);
-        res.setHeader('Content-type', `application/${fileType}`);
-
-        // Send the file to the client
-        const fileStream = fs.createReadStream(filePath);
-        fileStream.pipe(res);
-    } else {
-        // File not found, send a 404 response
-        res.status(404).send('File not found');
-    }
-});
-
-
-
 //ADMIN PRIVILEGE TO UPLOAD CERTIFICATE TO RESPECTED STUDENT
 app.post('/UploadRecords', (req, res, next) => {
     upload.single("file")(req, res, async function (err) {
