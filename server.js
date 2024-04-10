@@ -596,9 +596,7 @@ app.post('/download-certificate', (req, res) => {
       res.status(500).send('Internal Server Error');
     }
 });
-
-
-
+//Admin Upload History which Downloads the Respected files
 app.post('/download', (req, res) => {
     const filePath = req.body.filePath; // Get file path from form data
     const fileType = req.body.fileType; // Get file type from form data
@@ -617,9 +615,6 @@ app.post('/download', (req, res) => {
         res.status(404).send('File not found');
     }
 });
-
-
-
 //ADMIN PRIVILEGE TO UPLOAD CERTIFICATE TO RESPECTED STUDENT
 app.post('/UploadRecords', (req, res, next) => {
     upload.single("file")(req, res, async function (err) {
@@ -981,52 +976,6 @@ app.post('/delete-issue/:id', async (req, res) => {
 
 
 
-// Endpoint to view a file
-app.post('/viewFile', (req, res) => {
-    const filePath = req.body.filePath;
-
-    // Check if file exists
-    if (!fs.existsSync(filePath)) {
-        return res.status(404).send('File not found.');
-    }
-
-    // Determine the content type based on file extension
-    const ext = path.extname(filePath);
-    let contentType = 'application/octet-stream'; // default content type
-    if (ext === '.pdf') {
-        contentType = 'application/pdf';
-    } else if (ext === '.xlsx') {
-        contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    }
-
-    // Set the appropriate content type header
-    res.setHeader('Content-Type', contentType);
-
-    // Stream the file to the client
-    fs.createReadStream(filePath).pipe(res);
-});
-
-
-// Endpoint to download a file
-app.post('/downloadFile', (req, res) => {
-    const filePath = req.body.filePath;
-
-    // Check if file exists
-    if (!fs.existsSync(filePath)) {
-        return res.status(404).send('File not found.');
-    }
-
-    // Set the appropriate headers for file download
-    res.setHeader('Content-disposition', 'attachment; filename=' + path.basename(filePath));
-    res.setHeader('Content-Type', 'application/octet-stream');
-
-    // Stream the file to the client
-    fs.createReadStream(filePath).pipe(res);
-});
-
-
-
-
 
 
 //Test Routes
@@ -1034,9 +983,15 @@ app.post('/TestPostRoute',async (req, res) => {
     res.send("This is a test Route using POST Method")
 });
 
+
 app.get('/TestGetRoute',(req,res)=>{
     res.send("This is a test Route using GET Method")
 })
+
+
+
+
+
 
 
 //APP LISTENER
