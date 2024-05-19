@@ -145,7 +145,7 @@
                       </form>
                     </td>
                     <td>${student.certificate_type[index]}</td> <!-- Display certificate type -->
-                    <td>${new Date(student.certificate_date[index]).toLocaleDateString()}</td> <!-- Display certificate date -->
+                    <td>${formatDate(new Date(student.certificate_date[index]))}</td>
 
                     <td>${appPoint}</td>
                     <td>
@@ -174,6 +174,13 @@
           });
       });
     });
+      // Function to format date as "dd/mm/yyyy"
+      function formatDate(date) {
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
     // Function to delete a certificate
     function deleteCertificate(certificateId, certificatePath, certificateType, certificateDate, appPoints) {
       // Create a hidden form to submit the data

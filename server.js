@@ -322,7 +322,7 @@ app.get('/UploadsHistory', async (req, res) => {
             jwt.verify(token, secretKey, async (err, decoded) => {
                 if (err) {
                     // If token is not valid, render the login page
-                    res.render('login');
+                    res.redirect('/');
                 } else if (decoded.role != 'admin') {
                     res.redirect('/');
                 } else if (decoded.role === 'admin') {
@@ -492,7 +492,13 @@ app.post('/admin_Dashboard/uploadCertificates', upload.fields([{ name: 'pdfFileI
             fs.writeFileSync(outputPDFPath, pdfBytes); // Write the generated PDF to file
 
             // Send email with PDF attachment
+
+
+
             await sendEmailWithAttachment(entry.email, outputPDFPath, Name, eventName);
+
+
+
 
             // Upload PDF to MongoDB for respective student
             const existingStudent = await collection_student.findOne({ "roll_number": roll_number });
@@ -980,15 +986,15 @@ app.post('/delete-issue/:id', async (req, res) => {
 
 //Test Routes
 app.post('/TestPostRoute',async (req, res) => {
+    console.log("Got POST Method")
     res.send("This is a test Route using POST Method")
 });
 
 
 app.get('/TestGetRoute',(req,res)=>{
+    console.log("Got GET Method")
     res.send("This is a test Route using GET Method")
 })
-
-
 
 
 

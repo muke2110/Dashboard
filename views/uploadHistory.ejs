@@ -8,11 +8,11 @@
 </head>
 <body>
     <div class="container">
-        <a href="/">
-            <button>Back</button>
-        </a>
+        <form action="/" method="get">
+            <button type="submit" id="backbtn" class="back-btn">Back</button>
+        </form>
         <h1>Upload History</h1>
-        <table>
+        <table class="upload-history">
             <thead>
                 <tr>
                     <th>S. No</th>
@@ -31,13 +31,13 @@
                         <td><%= item.uploaded_By %></td>
                         <td>
                             <!-- Download options -->
-                            <form action="/download" method="post" style="display: inline-block">
+                            <form action="/download" method="post" class="download-form">
                                 <input type="hidden" name="filePath" value="<%= item.Pdf_path %>">
-                                <button type="submit" name="fileType" value="pdf">Download Template</button>
+                                <button type="submit" name="fileType" value="pdf" class="download-btn">Download Template</button>
                             </form>
-                            <form action="/download" method="post" style="display: inline-block">
+                            <form action="/download" method="post" class="download-form">
                                 <input type="hidden" name="filePath" value="<%= item.xlsx_path %>">
-                                <button type="submit" name="fileType" value="xlsx">Download Excel</button>
+                                <button type="submit" name="fileType" value="xlsx" class="download-btn">Download Excel</button>
                             </form>
                         </td>
                     </tr>

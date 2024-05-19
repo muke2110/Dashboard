@@ -9,13 +9,16 @@
     <link rel="stylesheet" href="/uploadpage.css">
 </head>
 <body>
-    <% if (typeof message != 'undefined') { %>
+    <!-- <% if (typeof message != 'undefined') { %>
         <div class="notification" id="notification">
             <%= message %>
         </div>
-    <% } %>
+    <% } %> -->
     <div class="dashboard-container">
         <h1>Select PDF, CSV and Positions</h1>
+        <form action="/" method="get">
+            <button type="submit" id="backbtn">Back</button>
+        </form>
         <form id="positionSelectionForm" action="/admin_Dashboard/uploadCertificates" method="post" enctype="multipart/form-data">
             <input type="file" id="fileInput" name="pdfFileInput" accept=".pdf" required />
             <button type="button" id="uploadFileButton">Upload File</button>
@@ -37,8 +40,8 @@
             <input type="hidden" id="eventPositionYInput" name="eventPositionY" />
             <input type="hidden" id="datePositionXInput" name="datePositionX" />
             <input type="hidden" id="datePositionYInput" name="datePositionY" />
-
-            <button type="button" id="previewCoordinatesButton">Preview Coordinates</button>
+            <br>
+            <!-- <button type="button" id="previewCoordinatesButton">Preview Coordinates</button> -->
             <button type="submit" id="submitButton" class="unique-submit-button" name="submitButton">Submit</button>
 
         </form>
@@ -47,11 +50,9 @@
             <h2>Selected Coordinates:</h2>
             <ul id="coordinatesList"></ul>
             <div id="pdfPreviewContainer" style="display: none"></div>
+            
             <button type="button" id="closePreviewButton" style="display: none">Close Preview</button>
         </div>
-        <a href="/">
-            <button class="backbtn">Back</button>
-        </a>
     </div>
 
     <div id="pdfModal" class="modal">
@@ -61,8 +62,36 @@
         </div>
     </div>
 
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="overlay">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast"></div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
     <script>
+        // Function to show loading overlay
+        function showLoadingOverlay() {
+            document.getElementById('loadingOverlay').style.display = 'block';
+        }
+
+        // Function to hide loading overlay
+        function hideLoadingOverlay() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // Function to show toast notification
+        function showToast(message) {
+            var toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.className = "toast show"; // Show the toast
+            setTimeout(function(){
+                toast.className = toast.className.replace("show", ""); // Hide the toast after 3 seconds
+            }, 3000);
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
             var fileInput = document.getElementById("fileInput");
             var uploadFileButton = document.getElementById("uploadFileButton");
@@ -206,19 +235,19 @@
             selectPositionName.addEventListener("click", function () {
                 currentPosition = "Name";
                 renderPdf();
-                cancelSelection.style.display = "block";
+                cancelSelection.style.visibility = "block";
             });
 
             selectPositionEvent.addEventListener("click", function () {
                 currentPosition = "Event";
                 renderPdf();
-                cancelSelection.style.display = "block";
+                cancelSelection.style.visibility = "block";
             });
 
             selectPositionDate.addEventListener("click", function () {
                 currentPosition = "Date";
                 renderPdf();
-                cancelSelection.style.display = "block";
+                cancelSelection.style.visibility = "block";
             });
 
             cancelSelection.addEventListener("click", function () {
@@ -231,6 +260,7 @@
                 currentPosition = null;
             });
         });
+
         document.addEventListener("DOMContentLoaded", function () {
             // Show toast notification
             var toast = document.getElementById("toast");
