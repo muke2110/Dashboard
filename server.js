@@ -14,6 +14,7 @@ const bodyParser = require('body-parser'); // 13. bodyParser
 const xlsx = require('xlsx'); // 14. xlsx
 const overlayTextOnTemplate = require('./Modules/textOverlay'); // 15. Imported from your textOverlay module
 const cors = require('cors'); // 16. cors
+const cron = require('node-cron'); //17 for cron jobs
 
 
 const port = 3000;
@@ -35,6 +36,8 @@ app.use('student',student);
 app.use('admin',adminInfo);
 app.use(cors());
 
+
+const WEBAPP_URL = 'https://college-dashboard-8k8e.onrender.com/';
 
 //GET routes
 
@@ -997,7 +1000,22 @@ app.get('/TestGetRoute',(req,res)=>{
 })
 
 
-
+// Cron job to ping the server every 4 minutes to keep it active
+cron.schedule('*/4 * * * *', () => {
+    console.log('Pinging the server to keep it active...');
+    axios.get(`${WEBAPP_URL}checkHealth`)
+      .then(response => {
+        console.log("Server is good");
+      })
+      .catch(err => {
+        console.error('Error pinging the server:', err);
+      });
+  });
+  
+  // Health check endpoint
+  app.get('/checkHealth', (req, res) => {
+    res.status(200).json("All ok!!!");
+  });
 
 
 //APP LISTENER
